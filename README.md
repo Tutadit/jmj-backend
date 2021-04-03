@@ -93,6 +93,20 @@ You can run the Ubuntu system from Windows Terminal by typing `ubuntu2004` on th
 
 All Done! We are ready to develop.
 
+
+### Use vscode to edit files in your ubuntu system
+
+1. cd into the project
+```
+cd jmj-backend
+```
+2. open the project in vscode
+```
+code .
+```
+
+
+
 ## What to develop?
 
 All the necessary files have been created but remain to be implemented according to our design spec. 
