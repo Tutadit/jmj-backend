@@ -119,7 +119,7 @@ The migrations for the following tables need to be implemented:
 
 
 Table | File under `database/migrations`
----------|----------|-------|
+---------|---------|
  Assigned  | `2021_04_03_154331_create_assigneds_table.php`
  Authors | `2021_04_03_154329_create_authors_table.php` 
  EvaluationMetric | `2021_04_03_154048_create_evaluation_metrics_table.php ` 
