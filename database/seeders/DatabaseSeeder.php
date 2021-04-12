@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AssignedSeeder::class,
-            AuthorSedder::class,
+            AuthorSeeder::class,
             EvaluationMetricSeeder::class,
             EvaluationSeeder::class,
             JournalSeeder::class,
