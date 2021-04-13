@@ -21,3 +21,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/error', function () {
+    return response()->json([
+        'error'=>true,
+        'message'=>'You are not allowed to view the page. Please provide valid credentials'
+    ],401);
+})->name('error');

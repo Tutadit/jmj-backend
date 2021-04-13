@@ -14,7 +14,7 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum','api'])->group(function () {
     Route::get('/user', function (Request $request) {
         return response()->json([
             'user'=>$request->user()

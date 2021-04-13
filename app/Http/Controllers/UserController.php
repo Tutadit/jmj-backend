@@ -173,19 +173,19 @@ class UserController extends Controller
     }
 
     public function getAllUsers(Request $request) {
-        return response->json([
+        return response()->json([
             'users' => User::all()
         ]);
     }
 
     public function getAllUsersOfType(Request $request, $type) {
-        return response->json([
+        return response()->json([
             'users' => User::where('type',$type)->get()
         ]);
     }
 
     public function getUserById(Request $request, $id) {
-        return response->json([
+        return response()->json([
             'user' => User::where('id',$id)->first()
         ]);
     }
