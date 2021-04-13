@@ -88,7 +88,7 @@ You can run the Ubuntu system from Windows Terminal by typing `ubuntu2004` on th
     ```
 6. Run database migrations and seedings
     ```
-    sail artisian migrate --seed
+    sail artisan migrate --seed
     ```
 
 All Done! We are ready to develop.
