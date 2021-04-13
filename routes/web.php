@@ -20,3 +20,4 @@ Route::get('/logout', [UserController::class,'logout']);
 Route::get('/', function () {
     return view('welcome');
 });
+

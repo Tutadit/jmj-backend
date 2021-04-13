@@ -12,6 +12,35 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
 
+    public function createToken(Request $request) {
+
+        $validated = $request->validate([
+            'tokenName' => 'required|string',
+        ]);
+
+        $token = $request->user()->createToken($request->tokenName);
+        return response()->json([
+            'token' => $token->plainTextToken
+        ]);
+    }
+
+    public function deleteToken(Request $request) {
+
+        $validated = $request->validate([
+            'tokenId' => 'required|integer',
+        ]);
+        $request->user()->tokens()->where('id', $request->tokenId)->delete();
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    public function getTokens(Request $request) {
+        return response()->json([
+            'tokens'=>$request->user()->tokens
+        ]);
+    }
+
     /**
      * Handle user registration
      */
@@ -138,4 +167,40 @@ class UserController extends Controller
             'success'=>true
         ]);
     }
+
+    public function approveRejectUser(Request $request, $id) {
+        return;
+    }
+
+    public function getAllUsers(Request $request) {
+        return response->json([
+            'users' => User::all()
+        ]);
+    }
+
+    public function getAllUsersOfType(Request $request, $type) {
+        return response->json([
+            'users' => User::where('type',$type)->get()
+        ]);
+    }
+
+    public function getUserById(Request $request, $id) {
+        return response->json([
+            'user' => User::where('id',$id)->first()
+        ]);
+    }
+
+    public function addUser(Request $request) {
+        return;
+    }
+
+    public function editUser(Request $request, $id) {
+        return;
+    }
+
+    public function removeUser(Request $request, $id) {
+        return;
+    }
+
+    
 }
