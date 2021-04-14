@@ -25,7 +25,7 @@ class CreateJournalsTable extends Migration
             $table->foreign('admin_email')->references('email')->on('users');
 
             // unique title and 'published_date'
-            $table->index(['title', 'published_date']);
+            $table->index(['title', 'published_date'], 'journal_index');
         });
     }
 
