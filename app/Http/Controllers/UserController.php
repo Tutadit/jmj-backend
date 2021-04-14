@@ -171,10 +171,10 @@ class UserController extends Controller
     public function getAllUsers(Request $request) {
 
         if ( $request->user()->type != 'admin') 
-        return response()->json([
-            'error' => true,
-            'message' => 'You do not have the authority to perform this action'
-        ], 401);
+            return response()->json([
+                'error' => true,
+                'message' => 'You do not have the authority to perform this action'
+            ], 401);
 
         return response()->json([
             'users' => User::all()
