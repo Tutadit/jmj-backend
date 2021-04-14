@@ -15,7 +15,7 @@ class CreateNominatedReviewersTable extends Migration
     {
         Schema::create('nominated_reviewers', function (Blueprint $table) {
             $table->id();                       
-            $table->int('paper_id');              
+            $table->unsignedBigInteger('paper_id');              
             $table->string('researcher_email');
             $table->string('reviewer_email');
             $table->timestamps();
@@ -26,7 +26,7 @@ class CreateNominatedReviewersTable extends Migration
             $table->foreign('reviewer_email')->references('email')->on('users');
 
             // index
-            $table->index(['paper_id', 'researcher_email', 'reviewer_email']);
+            $table->index(['paper_id', 'researcher_email', 'reviewer_email'], 'nr_index');
         });
     }
 

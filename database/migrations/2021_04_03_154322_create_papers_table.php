@@ -15,7 +15,6 @@ class CreatePapersTable extends Migration
     {
         Schema::create('papers', function (Blueprint $table) {
             $table->id();
-            $table->int('id');  
             $table->string('title'); 
             $table->set('status', ['pending_minor_revision', 'pending_major_revision', 'pending_publication']);
             $table->date('date_submitted');         // TODO: is this needed
@@ -28,7 +27,6 @@ class CreatePapersTable extends Migration
             //
             $table->foreign('researcher_email')->references('email')->on('users');
             $table->foreign('editor_email')->references('email')->on('users');
-            $table->foreign('em_name')->references('last_name')->on('users'); //TODO: is em_name = last_name
 
             //
             $table->index(['id', 'researcher_email']);

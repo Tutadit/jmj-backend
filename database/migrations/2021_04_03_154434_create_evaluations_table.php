@@ -17,12 +17,14 @@ class CreateEvaluationsTable extends Migration
             $table->id();
             $table->string('answer');
             $table->timestamps();
-            $table->int('review_id');   
+            $table->unsignedBigInteger('review_id');   
             $table->string('metric_question');
 
             // 
-            $table->foreign('review_id')->references('id')->on('reviews');
 
+            $table->foreign('review_id')->references('id')->on('reviews');
+            $table->foreign('metric_question')->references('question')->on('metrics');
+            $table->unique('metric_question');
             //
             $table->index(['review_id']);
         });

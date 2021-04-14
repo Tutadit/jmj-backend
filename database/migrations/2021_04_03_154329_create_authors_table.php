@@ -16,7 +16,7 @@ class CreateAuthorsTable extends Migration
         Schema::create('authors', function (Blueprint $table) {
             $table->id();
             $table->string('author');
-            $table->int('paper_id');   
+            $table->unsignedBigInteger('paper_id');   
             $table->string('researcher_email');
             $table->timestamps();
 

@@ -20,7 +20,6 @@ class CreateMeasuredBiesTable extends Migration
             $table->timestamps();
 
             //
-            $table->foreign('em_name')->references('last_name')->on('users'); //TODO: is em_name = last_name
             $table->foreign('metric_question')->references('metric_question')->on('evaluations'); 
             //TODO: check this is the foreign key
 

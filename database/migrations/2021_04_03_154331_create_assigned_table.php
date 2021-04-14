@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAssignedsTable extends Migration
+class CreateAssignedTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateAssignedsTable extends Migration
      */
     public function up()
     {
-        Schema::create('assigneds', function (Blueprint $table) {
+        Schema::create('assigned', function (Blueprint $table) {
             $table->id();
-            $table->int('paper_id');              
+            $table->unsignedBigInteger('paper_id');              
             $table->string('researcher_email');
             $table->string('reviewer_email');
             $table->date('minor_rev_deadline');  
