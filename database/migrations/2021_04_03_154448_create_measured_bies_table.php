@@ -20,7 +20,8 @@ class CreateMeasuredBiesTable extends Migration
             $table->timestamps();
 
             //
-            $table->foreign('metric_question')->references('metric_question')->on('evaluations'); 
+            $table->foreign('metric_question')->references('metric_question')->on('evaluations')->onUpdate('cascade')
+            ->onDelete('cascade'); 
             //TODO: check this is the foreign key
 
             // primary

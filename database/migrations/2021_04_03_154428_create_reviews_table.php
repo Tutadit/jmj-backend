@@ -23,9 +23,12 @@ class CreateReviewsTable extends Migration
             $table->timestamps();
 
             //
-            $table->foreign('reviewer_email')->references('email')->on('users');
-            $table->foreign('paper_id')->references('id')->on('papers');
-            $table->foreign('researcher_email')->references('email')->on('users');
+            $table->foreign('reviewer_email')->references('email')->on('users')->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->foreign('paper_id')->references('id')->on('papers')->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->foreign('researcher_email')->references('email')->on('users')->onUpdate('cascade')
+            ->onDelete('cascade');
 
             //
             $table->index(['id', 'reviewer_email']);

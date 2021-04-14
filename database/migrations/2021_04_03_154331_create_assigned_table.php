@@ -23,9 +23,12 @@ class CreateAssignedTable extends Migration
             $table->timestamps();
 
             // foreign key
-            $table->foreign('paper_id')->references('id')->on('papers');
-            $table->foreign('researcher_email')->references('email')->on('users');
-            $table->foreign('reviewer_email')->references('email')->on('users');
+            $table->foreign('paper_id')->references('id')->on('papers')->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->foreign('researcher_email')->references('email')->on('users')->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->foreign('reviewer_email')->references('email')->on('users')->onUpdate('cascade')
+            ->onDelete('cascade');
 
             // primary
             $table->index(['paper_id', 'researcher_email', 'reviewer_email']);

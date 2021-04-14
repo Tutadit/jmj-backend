@@ -22,7 +22,8 @@ class CreateJournalsTable extends Migration
             $table->string('admin_email');
 
             // foreign
-            $table->foreign('admin_email')->references('email')->on('users');
+            $table->foreign('admin_email')->references('email')->on('users')->onUpdate('cascade')
+            ->onDelete('cascade');
 
             // unique title and 'published_date'
             $table->index(['title', 'published_date'], 'journal_index');

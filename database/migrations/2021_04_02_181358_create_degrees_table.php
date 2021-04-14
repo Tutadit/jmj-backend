@@ -19,7 +19,9 @@ class CreateDegreesTable extends Migration
             $table->string('institution');      // not in og relation
             $table->date('received');           // not in og relation
             $table->string('researcher_email');
-            $table->foreign('researcher_email')->references('email')->on('users');
+            $table->foreign('researcher_email')->references('email')->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->index(['title','institution','researcher_email']);
             $table->timestamps();
         });

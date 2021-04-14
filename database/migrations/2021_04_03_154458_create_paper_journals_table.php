@@ -20,8 +20,10 @@ class CreatePaperJournalsTable extends Migration
             $table->timestamps();
 
             //
-            $table->foreign('paper_id')->references('id')->on('papers');
-            $table->foreign('journal_id')->references('id')->on('journals');            
+            $table->foreign('paper_id')->references('id')->on('papers')->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->foreign('journal_id')->references('id')->on('journals')->onUpdate('cascade')
+            ->onDelete('cascade');            
 
             //
             $table->index(['paper_id', 'journal_id'], 'paper_journals_index'); 

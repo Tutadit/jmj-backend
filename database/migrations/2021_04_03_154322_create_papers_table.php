@@ -24,9 +24,12 @@ class CreatePapersTable extends Migration
             $table->timestamps();
 
             //
-            $table->foreign('researcher_email')->references('email')->on('users');
-            $table->foreign('editor_email')->references('email')->on('users');
-            $table->foreign('em_name')->references('name')->on('evaluation_metrics');
+            $table->foreign('researcher_email')->references('email')->on('users')->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->foreign('editor_email')->references('email')->on('users')->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->foreign('em_name')->references('name')->on('evaluation_metrics')->onUpdate('cascade')
+            ->onDelete('cascade');
             
             $table->index(['id', 'researcher_email']);
         });

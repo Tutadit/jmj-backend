@@ -22,8 +22,10 @@ class CreateEvaluationsTable extends Migration
 
             // 
 
-            $table->foreign('review_id')->references('id')->on('reviews');
-            $table->foreign('metric_question')->references('question')->on('metrics');
+            $table->foreign('review_id')->references('id')->on('reviews')->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->foreign('metric_question')->references('question')->on('metrics')->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->unique('metric_question');
             //
             $table->index(['review_id']);
