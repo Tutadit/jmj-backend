@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class paperJournal extends Model
+class EvaluationMetric extends Model
 {
     use HasFactory;
 }

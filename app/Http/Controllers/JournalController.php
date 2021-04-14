@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Journal;
+use App\Models\Paper;
 
 class JournalController extends Controller
 {
@@ -49,11 +50,14 @@ class JournalController extends Controller
                 'error'=>true,
                 'message'=> 'Could not find Journal with id of ' . $id
             ]);
+        
+        $papers = Paper::where('journal_id',$journal->id)->get();
 
         return response()->json([
             'title' => $journal->title,
             'published_date' => $journal->published_date,
-            'status' => $journal->status
+            'status' => $journal->status,
+            'papers' => $papers
         ]);
     }
 
