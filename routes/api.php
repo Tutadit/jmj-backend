@@ -33,6 +33,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/users/{id}',[UserController::class,'getUserById']);
     Route::post('/users/{id}/edit',[UserController::class,'editUser']);
     Route::post('/users/{id}/remove',[UserController::class,'removeUser']);
+    Route::get('/users/{id}/degrees',[UserController::class,'getUserDegrees']);
 
     Route::post('/tokens/create', [UserController::class,'createToken']);
     Route::post('/tokens/delete', [UserController::class,'deleteToken']);

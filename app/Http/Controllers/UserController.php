@@ -343,7 +343,14 @@ class UserController extends Controller
                 'message' => 'You do not have the authority to perform this action'
             ], 401);
             
-        $user = User::where('id',$id)->firstOrFail();
+        $user = User::find($id);
+        
+        if (!$user) 
+            return response()->json([
+                'error' => true,
+                'message' => 'User with id ' . $id . ' does not exist'
+            ]);
+
         $user->delete();
 
         return response()->json([
@@ -353,6 +360,32 @@ class UserController extends Controller
 
     public function approveRejectUser(Request $request, $id) {
         return;
+    }
+
+    public function getUserDegrees(Request $request, $id) {
+
+        $user = User::find($id);
+        
+        if (!$user) 
+            return response()->json([
+                'error' => true,
+                'message' => 'User with id ' . $id . ' does not exist'
+            ]);
+
+        if ($user->type != 'researcher') 
+            return response()->json([
+                'error' => true,
+                'message' => 'User with id ' . $id . ' is not a researcher'
+            ]);
+        
+        
+        $degrees = Degree::where('researcher_email', $user->email)->get();
+
+        return response()->json([
+            'degrees' => $degrees
+        ]);
+
+
     }
     
 }
