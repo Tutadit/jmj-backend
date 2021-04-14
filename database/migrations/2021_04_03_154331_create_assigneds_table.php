@@ -15,7 +15,20 @@ class CreateAssignedsTable extends Migration
     {
         Schema::create('assigneds', function (Blueprint $table) {
             $table->id();
+            $table->int('paper_id');              
+            $table->string('researcher_email');
+            $table->string('reviewer_email');
+            $table->date('minor_rev_deadline');  
+            $table->date('major_rev_deadline');        
             $table->timestamps();
+
+            // foreign key
+            $table->foreign('paper_id')->references('id')->on('papers');
+            $table->foreign('researcher_email')->references('email')->on('users');
+            $table->foreign('reviewer_email')->references('email')->on('users');
+
+            // primary
+            $table->index(['paper_id', 'researcher_email', 'reviewer_email']);
         });
     }
 

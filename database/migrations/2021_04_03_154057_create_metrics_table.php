@@ -15,7 +15,11 @@ class CreateMetricsTable extends Migration
     {
         Schema::create('metrics', function (Blueprint $table) {
             $table->id();
+            $table->string('question');             
+            $table->set('answer_type', ['scale', 'comment']);
             $table->timestamps();
+
+            $table->index(['question']);
         });
     }
 

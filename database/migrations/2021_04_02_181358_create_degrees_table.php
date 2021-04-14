@@ -16,8 +16,8 @@ class CreateDegreesTable extends Migration
         Schema::create('degrees', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('institution');
-            $table->date('received');
+            $table->string('institution');      // not in og relation
+            $table->date('received');           // not in og relation
             $table->string('researcher_email');
             $table->foreign('researcher_email')->references('email')->on('users');
             $table->index(['title','institution','researcher_email']);

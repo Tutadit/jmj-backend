@@ -15,7 +15,16 @@ class CreateEvaluationsTable extends Migration
     {
         Schema::create('evaluations', function (Blueprint $table) {
             $table->id();
+            $table->string('answer');
             $table->timestamps();
+            $table->int('review_id');   
+            $table->string('metric_question');
+
+            // 
+            $table->foreign('review_id')->references('id')->on('reviews');
+
+            //
+            $table->index(['review_id']);
         });
     }
 

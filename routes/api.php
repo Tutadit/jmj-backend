@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\JournalController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,13 +16,16 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::middleware(['auth:sanctum','api'])->group(function () {
+// method makes sure user is authenticated
+Route::middleware(['auth:sanctum'])->group(function () {
+    // method is run when api/user is called
     Route::get('/user', function (Request $request) {
         return response()->json([
-            'user'=>$request->user()
+            'user'=>$request->user()    // given user is passed as argument
         ]);
     });
 
+    // string is function name
     Route::get('/users/all',[UserController::class,'getAllUsers']);
     Route::post('/users/new',[UserController::class,'addUser']);
     Route::get('/users/of_type/{type}',[UserController::class,'getAllUsersOfType']);
@@ -33,7 +38,7 @@ Route::middleware(['auth:sanctum','api'])->group(function () {
     Route::post('/tokens/delete', [UserController::class,'deleteToken']);
     Route::get('/tokens/all', [UserController::class,'getTokens']); 
 
-
+    Route::post('/journals/create',[JournalController::class,'createJournal']);
     Route::get('/journals/all', [JournalController::class,'getAllJournals']);
     Route::get('/journals/{id}', [JournalController::class,'getJournalById']);
     Route::post('/journals/{id}/edit',[JournalController::class,'editJournal']);

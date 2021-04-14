@@ -15,7 +15,17 @@ class CreateAuthorsTable extends Migration
     {
         Schema::create('authors', function (Blueprint $table) {
             $table->id();
+            $table->string('author');
+            $table->int('paper_id');   
+            $table->string('researcher_email');
             $table->timestamps();
+
+            // foreign key
+            $table->foreign('paper_id')->references('id')->on('papers');
+            $table->foreign('researcher_email')->references('email')->on('users');
+
+            // primary
+            $table->index(['author', 'paper_id', 'researcher_email']);
         });
     }
 

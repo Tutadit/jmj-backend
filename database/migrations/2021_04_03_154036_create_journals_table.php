@@ -14,14 +14,25 @@ class CreateJournalsTable extends Migration
     public function up()
     {
         Schema::create('journals', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id();       
+            $table->string('title');                // Title
+            $table->date('published_date');         // Published Date
+            $table->set('status', ['pending', 'approved', 'rejected']);
+            $table->timestamps();                   // Journals[created_On, last_Updated]
+            $table->string('admin_email');
+
+            // foreign
+            $table->foreign('admin_email')->references('email')->on('users');
+
+            // unique title and 'published_date'
+            $table->index(['title', 'published_date']);
         });
     }
 
     /**
      * Reverse the migrations.
      *
+     * this drops the table
      * @return void
      */
     public function down()

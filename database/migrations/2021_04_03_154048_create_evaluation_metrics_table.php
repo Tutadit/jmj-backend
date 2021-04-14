@@ -15,7 +15,11 @@ class CreateEvaluationMetricsTable extends Migration
     {
         Schema::create('evaluation_metrics', function (Blueprint $table) {
             $table->id();
+            $table->string('name');                // Name
             $table->timestamps();
+
+            // unique name
+            $table->index(['name']);
         });
     }
 

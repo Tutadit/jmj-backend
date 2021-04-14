@@ -14,8 +14,19 @@ class CreateNominatedReviewersTable extends Migration
     public function up()
     {
         Schema::create('nominated_reviewers', function (Blueprint $table) {
-            $table->id();
+            $table->id();                       
+            $table->int('paper_id');              
+            $table->string('researcher_email');
+            $table->string('reviewer_email');
             $table->timestamps();
+
+            // foreign key
+            $table->foreign('paper_id')->references('id')->on('papers');
+            $table->foreign('researcher_email')->references('email')->on('users');
+            $table->foreign('reviewer_email')->references('email')->on('users');
+
+            // index
+            $table->index(['paper_id', 'researcher_email', 'reviewer_email']);
         });
     }
 
