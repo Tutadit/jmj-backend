@@ -50,7 +50,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/paper/{id}/status',[PaperController::class,'getPaperStatus']);
     Route::post('/paper/{id}/withdraw',[PaperController::class,'withdrawPaper']);
     Route::post('/paper/{id}/request_withdraw',[PaperController::class,'requestWithdrawPaper']);
-
     Route::post('/paper/upload', [PaperController::class,'uploadPaper']);
 
 

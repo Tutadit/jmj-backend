@@ -16,8 +16,7 @@ class CreatePapersTable extends Migration
         Schema::create('papers', function (Blueprint $table) {
             $table->id();
             $table->string('title'); 
-            $table->set('status', ['pending_minor_revision', 'pending_major_revision', 'pending_publication']);
-            $table->date('date_submitted');         // TODO: is this needed
+            $table->set('status', ['pending_minor_revision', 'pending_major_revision', 'pending_publication', 'published']);
             $table->string('file_path');
             $table->string('researcher_email');
             $table->string('editor_email');
@@ -27,8 +26,8 @@ class CreatePapersTable extends Migration
             //
             $table->foreign('researcher_email')->references('email')->on('users');
             $table->foreign('editor_email')->references('email')->on('users');
-
-            //
+            $table->foreign('em_name')->references('name')->on('evaluation_metrics');
+            
             $table->index(['id', 'researcher_email']);
         });
     }

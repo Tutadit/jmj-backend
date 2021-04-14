@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            UserSeeder::class,
             AssignedSeeder::class,
             AuthorsSeeder::class,
             EvaluationMetricSeeder::class,
@@ -22,10 +23,10 @@ class DatabaseSeeder extends Seeder
             MeasuredBySeeder::class,
             MetricSeeder::class,
             NominatedReviewersSeeder::class,
-            PaperJournalSeeder::class,
             PaperSeeder::class,
+            PaperJournalSeeder::class,            
             ReviewSeeder::class,
-            UserSeeder::class,
+            
         ]);
     }
 }

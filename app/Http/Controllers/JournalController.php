@@ -31,8 +31,7 @@ class JournalController extends Controller
         $Journal -> status='pending';    // status
         // timstamp autogen
         $Journal -> admin_email='admin@mail.com';//$request->user()->admin_email;  // admin_email
-        $Journal -> save();
-
+        $Journal -> save();                
         
     }
 
@@ -43,7 +42,19 @@ class JournalController extends Controller
     }
 
     public function getJournalById(Request $request, $id) {
-        return;
+        $journal = Journal::find($id);
+
+        if (!$journal)
+            return response()->json([
+                'error'=>true,
+                'message'=> 'Could not find Journal with id of ' . $id
+            ]);
+
+        return response()->json([
+            'title' => $journal->title,
+            'published_date' => $journal->published_date,
+            'status' => $journal->status
+        ]);
     }
 
     public function approveJournal(Request $request, $id) {
