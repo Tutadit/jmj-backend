@@ -312,7 +312,7 @@ class UserController extends Controller
             'first_name' => 'string',
             'last_name' => 'string',
             'type' => 'in:viewer,researcher,reviewer,admin,editor',
-            'admin_email' => 'email|exists:users',
+            'admin_email' => 'exclude_if:admin_email,null|email|exists:users',
             'degrees' => 'array',
         ]);
 
