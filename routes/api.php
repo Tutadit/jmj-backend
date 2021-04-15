@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\JournalController;
+use App\Http\Controllers\PaperController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,12 +46,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/journals/{id}/remove',[JournalController::class,'removeJournal']);
     Route::post('/journals/{id}/change_status',[JournalController::class,'changeStatusJournal']);
 
+    Route::get('/paper/all', [PaperController::class,'getAllPapers']);
     Route::get('/paper/{id}', [PaperController::class,'getPaperById']);
     Route::post('/paper/{id}/edit', [PaperController::class,'editPaper']);
     Route::get('/paper/{id}/status',[PaperController::class,'getPaperStatus']);
     Route::post('/paper/{id}/withdraw',[PaperController::class,'withdrawPaper']);
     Route::post('/paper/{id}/request_withdraw',[PaperController::class,'requestWithdrawPaper']);
     Route::post('/paper/upload', [PaperController::class,'uploadPaper']);
+    
 
 
     Route::post('/nominated/new', [NominatedReviewersController::class,'nominateForPaper']);
