@@ -29,7 +29,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/users/all',[UserController::class,'getAllUsers']);
     Route::post('/users/new',[UserController::class,'addUser']);
     Route::get('/users/of_type/{type}',[UserController::class,'getAllUsersOfType']);
-    Route::post('/users/{id}',[UserController::class,'approveRejectUser']);
     Route::get('/users/{id}',[UserController::class,'getUserById']);
     Route::post('/users/{id}/edit',[UserController::class,'editUser']);
     Route::post('/users/{id}/remove',[UserController::class,'removeUser']);

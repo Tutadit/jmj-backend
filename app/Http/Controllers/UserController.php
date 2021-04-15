@@ -86,6 +86,13 @@ class UserController extends Controller
         $user->type = $request->type;
         $user->first_name = $request->firstName;
         $user->last_name = $request->lastName;
+
+        if ($request->type == 'viewer')
+            $user->status ='approved';
+        else
+            $user->status ='awaiting';
+
+            
         $user->save();
         
         if ($request->type == "researcher"){
@@ -314,6 +321,7 @@ class UserController extends Controller
             'type' => 'in:viewer,researcher,reviewer,admin,editor',
             'admin_email' => 'exclude_if:admin_email,null|email|exists:users',
             'degrees' => 'array',
+            'status' => 'in:awaiting,approved'
         ]);
 
         if ($request->has('email'))
@@ -333,6 +341,9 @@ class UserController extends Controller
 
         if ($request->has('admin_email'))
             $user->admin_email = $request->admin_email;
+
+        if ($request->has('status'))
+            $user->status = $request->status;
         
         $user->save();
         
@@ -362,10 +373,6 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
         ]);
-    }
-
-    public function approveRejectUser(Request $request, $id) {
-        return;
     }
 
     public function getUserDegrees(Request $request, $id) {
