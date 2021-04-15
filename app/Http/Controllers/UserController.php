@@ -183,7 +183,7 @@ class UserController extends Controller
 
     public function getAllUsersOfType(Request $request, $type) {
 
-        if ( $request->user()->type != 'admin') 
+        if ( $request->user()->type != 'admin' && $request->user()->type != 'editor') 
         return response()->json([
             'error' => true,
             'message' => 'You do not have the authority to perform this action'
@@ -197,7 +197,7 @@ class UserController extends Controller
 
     public function getUserById(Request $request, $id) {
 
-        if ( $request->user()->type != 'admin') 
+        if ( $request->user()->type != 'admin'  && $request->user()->type != 'editor') 
         return response()->json([
             'error' => true,
             'message' => 'You do not have the authority to perform this action'
@@ -298,13 +298,19 @@ class UserController extends Controller
             ], 401);
 
         
-        $user = User::where('id',$id)->firstOrFail();
+        $user = User::find($id);
         
+        if (!$user) 
+        return response()->json([
+            'error' => true,
+            'message' => 'User with id ' . $id . ' does not exist'
+        ]);
+
         $validated = $request->validate([
-            'email' => 'email|unique:users',
+            'email' => 'email|exclude_if:email,'.$user->email .'|unique:users',
             'password' => 'string|min:6',
-            'firstName' => 'string',
-            'lastName' => 'string',
+            'first_name' => 'string',
+            'last_name' => 'string',
             'type' => 'in:viewer,researcher,reviewer,admin,editor',
             'admin_email' => 'email|exists:users',
             'degrees' => 'array',
@@ -316,11 +322,11 @@ class UserController extends Controller
         if ($request->has('password'))
             $user->password = $request->password;
         
-        if ($request->has('firstName'))
-            $user->first_name = $request->firstName;
+        if ($request->has('first_name'))
+            $user->first_name = $request->first_name;
 
-        if ($request->has('lastName'))
-            $user->last_name = $request->lastName;
+        if ($request->has('last_name'))
+            $user->last_name = $request->last_name;
         
         if ($request->has('type'))
             $user->type = $request->type;
