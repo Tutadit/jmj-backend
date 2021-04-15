@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('admin_email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->set('status', ['approved', 'awaiting']);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -20,7 +20,8 @@ class UserSeeder extends Seeder
             'last_name' => 'Jackson',
             'email' => 'admin@mail.com',
             'password' => Hash::make('password'),
-            'type'=>'admin'
+            'type'=>'admin',
+            'status' => 'approved'
         ]);
 
         DB::table('users')->insert([
@@ -29,7 +30,8 @@ class UserSeeder extends Seeder
             'email' => 'researcher@mail.com',
             'admin_email' => 'admin@mail.com',
             'password' => Hash::make('password'),
-            'type'=>'researcher'
+            'type'=>'researcher',
+            'status' => 'approved'
         ]);
 
         DB::table('degrees')->insert([
@@ -45,7 +47,8 @@ class UserSeeder extends Seeder
             'email' => 'editor@mail.com',
             'admin_email' => 'admin@mail.com',
             'password' => Hash::make('password'),
-            'type'=>'editor'
+            'type'=>'editor',
+            'status' => 'approved'
         ]);
 
         DB::table('users')->insert([
@@ -54,7 +57,8 @@ class UserSeeder extends Seeder
             'email' => 'reviewer@mail.com',
             'admin_email' => 'admin@mail.com',
             'password' => Hash::make('password'),
-            'type'=>'reviewer'
+            'type'=>'reviewer',
+            'status' => 'approved'
         ]);
 
         DB::table('users')->insert([
@@ -63,7 +67,71 @@ class UserSeeder extends Seeder
             'email' => 'viewer@mail.com',
             'admin_email' => 'admin@mail.com',
             'password' => Hash::make('password'),
-            'type'=>'viewer'
+            'type'=>'viewer',
+            'status' => 'approved'
+        ]);
+
+        // create researchers
+        DB::table('users')->insert([
+            'first_name' => 'Researcher',
+            'last_name' => '1',
+            'email' => 'researcher1@mail.com',
+            'admin_email' => 'admin@mail.com',
+            'password' => Hash::make('password'),
+            'type'=>'researcher',
+            'status' => 'approved'
+        ]);
+
+        DB::table('degrees')->insert([
+            'title' => 'Deg1',
+            'institution' => 'University1',
+            'received' => '02/02/02',
+            'researcher_email' => 'researcher1@mail.com'
+        ]);
+
+        DB::table('degrees')->insert([
+            'title' => 'Deg2',
+            'institution' => 'University2',
+            'received' => '02/02/02',
+            'researcher_email' => 'researcher1@mail.com'
+        ]);
+
+        DB::table('users')->insert([
+            'first_name' => 'Researcher',
+            'last_name' => '2',
+            'email' => 'researcher2@mail.com',
+            'admin_email' => 'admin@mail.com',
+            'password' => Hash::make('password'),
+            'type'=>'researcher',
+            'status' => 'awaiting'
+        ]);
+
+        DB::table('degrees')->insert([
+            'title' => 'Deg1',
+            'institution' => 'University1',
+            'received' => '02/02/02',
+            'researcher_email' => 'researcher2@mail.com'
+        ]);
+
+        // create reviewers
+        DB::table('users')->insert([
+            'first_name' => 'Reviewer',
+            'last_name' => '1',
+            'email' => 'reviewer1@mail.com',
+            'admin_email' => 'admin@mail.com',
+            'password' => Hash::make('password'),
+            'type'=>'reviewer',
+            'status' => 'approved'
+        ]);
+
+        DB::table('users')->insert([
+            'first_name' => 'Reviewer',
+            'last_name' => '2',
+            'email' => 'reviewer2@mail.com',
+            'admin_email' => 'admin@mail.com',
+            'password' => Hash::make('password'),
+            'type'=>'reviewer',
+            'status' => 'awaiting'
         ]);
     }
 }
