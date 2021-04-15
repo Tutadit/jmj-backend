@@ -63,10 +63,12 @@ class JournalController extends Controller
         }
 
         return response()->json([
-            'title' => $journal->title,
-            'published_date' => $journal->published_date,
-            'status' => $journal->status,
-            'papers' => $papers
+            'journal' => [
+                'title' => $journal->title,
+                'published_date' => $journal->published_date,
+                'status' => $journal->status,
+                'papers' => $papers
+            ]
         ]);
     }
 
