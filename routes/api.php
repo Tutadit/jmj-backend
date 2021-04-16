@@ -64,6 +64,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/paper/upload', [PaperController::class,'uploadPaper']);
 
     Route::post('/nominated/new', [NominatedReviewersController::class,'nominateForPaper']);
+    Route::post('/nominated/remove', [NominatedReviewersController::class,'removeNominee']);
 
     Route::get('/reviews/{id}',[ReviewController::class,'getReviewsForPaper']);
     Route::post('/reviews/{id}',[ReviewController::class,'approveRejectReview']);
