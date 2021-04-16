@@ -32,15 +32,21 @@ class PaperController extends Controller
     }
 
     public function getAllPapers(Request $request) {
-        if ($request->user()->type != 'admin') {
+
+        if ($request->user()->type == 'admin') {
             return response()->json([
-                'error' => true,
-                'message' => 'You are not alloweed to view this section'
-            ], 401);
+                'papers' => Paper::all()
+            ]);
+        } else if ($request->user()->type == 'editor') {
+            
+            return response()->json([
+                'papers' => Paper::where('editor_email', $request->user()->email)->get()
+            ]);
         }
 
         return response()->json([
-            'papers' => Paper::all()
-        ]);
+            'error' => true,
+            'message' => 'You are not alloweed to view this section'
+        ], 401);
     }
 }
