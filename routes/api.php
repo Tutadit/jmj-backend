@@ -52,6 +52,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
     Route::get('/paper/all', [PaperController::class,'getAllPapers']);
+    Route::get('/paper/by_researcher/{id}', [PaperController::class, 'getAllPapersByResearcher']);
     Route::get('/paper/{id}', [PaperController::class,'getPaperById']);
     Route::post('/paper/{id}/edit', [PaperController::class,'editPaper']);
     Route::get('/paper/{id}/status',[PaperController::class,'getPaperStatus']);

@@ -85,5 +85,32 @@ class PaperSeeder extends Seeder
             'editor_email' => 'editor@mail.com',
             'em_name' => 'Number Eval'
         ]);
+
+        DB::table('papers')->insert([
+            'title' => 'Paper of number 9',
+            'status' => 'published',
+            'file_path' => 'file1.pdf',
+            'researcher_email' => 'researcher1@mail.com',
+            'editor_email' => 'editor@mail.com',
+            'em_name' => 'Number Eval'
+        ]);
+
+        DB::table('papers')->insert([
+            'title' => 'Paper of number 10',
+            'status' => 'pending_minor_revision',
+            'file_path' => 'file2.pdf',
+            'researcher_email' => 'researcher1@mail.com',
+            'editor_email' => 'editor@mail.com',
+            'em_name' => 'Number Eval'
+        ]);
+
+        DB::table('papers')->insert([
+            'title' => 'Paper of number 11',
+            'status' => 'pending_major_revision',
+            'file_path' => 'file3.pdf',
+            'researcher_email' => 'researcher2@mail.com',
+            'editor_email' => 'editor@mail.com',
+            'em_name' => 'Number Eval'
+        ]);
     }
 }
