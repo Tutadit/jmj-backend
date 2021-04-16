@@ -93,6 +93,7 @@ class JournalController extends Controller
                 'published_date' => $journal->published_date,
                 'status' => $journal->status,
                 'admin_email' => $journal->admin_email,
+                'editor_email' => $editor_email,
                 'papers' => $papers
             ]
         ]);
@@ -147,7 +148,8 @@ class JournalController extends Controller
             'title'=>'string',
             'published_date'=>'date_format:Y-m-d',
             'status'=>'in:pending,approved,rejected',
-            'admin_email'=>'email|exists:users'
+            'admin_email'=>'email|exists:users',
+            'editor_email' =>'email|exists:users',
         ]);
                     
 
@@ -162,6 +164,9 @@ class JournalController extends Controller
 
         if($request->has('admin_email'))
             $journal->admin_email = $request->admin_email;
+
+        if($request->has('admin_email'))
+            $journal->editor_email = $request->editor_email;
 
         $journal->save();
 
@@ -208,6 +213,17 @@ class JournalController extends Controller
 
         $journal = Journal::find($id);
         $paper = Paper::find($request->paper_id);
+
+        if ($request->user() == 'editor') {
+            if ($journal->editor_email != $request->user()->email ||
+                $paper->editor_email != $request->user()->email) {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'You do not have the authority to perform this action'
+                ], 401);
+            }
+        }
+
         if (!$journal)
             return response()->json([
                 'error' => true,
