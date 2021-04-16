@@ -67,4 +67,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/reviews/{id}',[ReviewController::class,'approveRejectReview']);
 
     Route::post('/assigned/new',[AssignedController::class,'assignReviewer']);
+    Route::get('/assigned/reviewer/{id}', [AssignedController::class, 'getAllPapersAssignedToReviewer']);
 });
