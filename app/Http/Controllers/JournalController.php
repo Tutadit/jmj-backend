@@ -93,7 +93,7 @@ class JournalController extends Controller
                 'published_date' => $journal->published_date,
                 'status' => $journal->status,
                 'admin_email' => $journal->admin_email,
-                'editor_email' => $editor_email,
+                'editor_email' => $journal->editor_email,
                 'papers' => $papers
             ]
         ]);
@@ -148,8 +148,8 @@ class JournalController extends Controller
             'title'=>'string',
             'published_date'=>'date_format:Y-m-d',
             'status'=>'in:pending,approved,rejected',
-            'admin_email'=>'email|exists:users',
-            'editor_email' =>'email|exists:users',
+            'admin_email'=>'email|exists:users,email',
+            'editor_email' =>'email|exists:users,email',
         ]);
                     
 
@@ -165,7 +165,7 @@ class JournalController extends Controller
         if($request->has('admin_email'))
             $journal->admin_email = $request->admin_email;
 
-        if($request->has('admin_email'))
+        if($request->has('editor_email'))
             $journal->editor_email = $request->editor_email;
 
         $journal->save();

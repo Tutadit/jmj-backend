@@ -19,6 +19,7 @@ class JournalSeeder extends Seeder
             'published_date' => '2021-03-14',
             'status' => 'approved',
             'admin_email' => 'admin@mail.com',
+            'editor_email' => 'editor@mail.com'
         ]);
 
         DB::table('journals')->insert([
@@ -26,6 +27,7 @@ class JournalSeeder extends Seeder
             'published_date' => '2021-04-03',
             'status' => 'approved',
             'admin_email' => 'admin@mail.com',
+            'editor_email' => 'editor@mail.com'
         ]);
 
         DB::table('journals')->insert([
@@ -33,6 +35,7 @@ class JournalSeeder extends Seeder
             'published_date' => '2021-04-13',
             'status' => 'pending',
             'admin_email' => 'admin@mail.com',
+            'editor_email' => 'editor@mail.com'
         ]);
     }
 }
