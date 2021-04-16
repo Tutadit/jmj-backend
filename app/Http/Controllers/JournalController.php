@@ -148,7 +148,7 @@ class JournalController extends Controller
 
     public function editJournal(Request $request, $id) {
         
-        if ( $request->user()->type != 'admin') 
+        if ( $request->user()->type != 'admin' && $request->user()->type != 'editor') 
             return response()->json([
                 'error' => true,
                 'message' => 'You do not have the authority to perform this action'

@@ -250,8 +250,7 @@ class PaperController extends Controller
             return response()->json([
                 'papers' => Paper::all()
             ]);
-        } else if ($request->user()->type == 'editor') {
-            
+        } else if ($request->user()->type == 'editor') {            
             return response()->json([
                 'papers' => Paper::where('editor_email', $request->user()->email)->get()
             ]);
