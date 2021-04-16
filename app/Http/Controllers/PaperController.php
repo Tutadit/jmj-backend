@@ -199,7 +199,7 @@ class PaperController extends Controller
             $paper = Paper::find($id);
 
             if (!$paper)
-                return response->json([
+                return response()->json([
                     'error' => true,
                     'message' => 'paper with id '. $id . 'does not exist'
                 ]);
