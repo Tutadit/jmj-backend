@@ -32,13 +32,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/users/all',[UserController::class,'getAllUsers']);
     Route::post('/users/new',[UserController::class,'addUser']);
     Route::get('/users/of_type/{type}',[UserController::class,'getAllUsersOfType']);
+    Route::get('/users/signups',[UserController::class,'getSignUps']);
     Route::get('/users/{id}',[UserController::class,'getUserById']);
     Route::post('/users/{id}/edit',[UserController::class,'editUser']);
     Route::post('/users/{id}/remove',[UserController::class,'removeUser']);
     Route::get('/users/{id}/degrees',[UserController::class,'getUserDegrees']);
     Route::post('/users/{id}/degrees/new',[UserController::class,'addDegree']);
     Route::post('/users/{id}/degrees/delete',[UserController::class,'removeDegree']);
-    Route::get('/users/signups',[UserController::class,'getSignUps']);
 
     Route::post('/tokens/create', [UserController::class,'createToken']);
     Route::post('/tokens/delete', [UserController::class,'deleteToken']);
