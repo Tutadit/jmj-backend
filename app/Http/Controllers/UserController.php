@@ -49,8 +49,8 @@ class UserController extends Controller
             'email' => 'email|required|unique:users',
             'password' => 'required|string|min:6',
             'passwordConfirmation' => 'required|string|same:password',
-            'firstName' => 'required|string',
-            'lastName' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
             'type' => 'required|in:viewer,researcher,reviewer',
             'degrees' => 'required_if:type,researcher|array',
         ]);
@@ -84,8 +84,8 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->type = $request->type;
-        $user->first_name = $request->firstName;
-        $user->last_name = $request->lastName;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
 
         if ($request->type == 'viewer')
             $user->status ='approved';
@@ -228,8 +228,8 @@ class UserController extends Controller
             'email' => 'email|required|unique:users',
             'password' => 'required|string|min:6',
             'passwordConfirmation' => 'required|string|same:password',
-            'firstName' => 'required|string',
-            'lastName' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
             'type' => 'required|in:viewer,researcher,reviewer,admin,editor',
             'admin_email' => 'required|email|exists:users',
             'degrees' => 'required_if:type,researcher|array',
@@ -262,8 +262,8 @@ class UserController extends Controller
 
         $newUser = new User;
         $newUser->email = $request->email;
-        $newUser->first_name = $request->firstName;
-        $newUser->last_name = $request->lastName;
+        $newUser->first_name = $request->first_name;
+        $newUser->last_name = $request->last_name;
         $newUser->type = $request->type;
         $newUser->password = Hash::make($request->password);
         $newUser->admin_email = $request->admin_email;
