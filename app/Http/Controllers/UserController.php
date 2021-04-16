@@ -354,9 +354,36 @@ class UserController extends Controller
         ]);
     }
 
+    public function changeStatus(Request $request, $id) {
+        if ( $request->user()->type != 'admin' &&  $request->user()->type != 'editor') 
+            return response()->json([
+                'error' => true,
+                'message' => 'You do not have the authority to perform this action'
+            ], 401);
+
+        $user = User::find($id);
+
+        if (!$user) 
+            return response()->json([
+                'error' => true,
+                'message' => 'User with id ' . $id . ' does not exist'
+            ],404);
+
+        $validated = $request->validate([
+            'status' => 'in:awaiting,approved'
+        ]);
+        
+        $user->status = 'approved';
+        $user->save();
+        
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+
     public function removeUser(Request $request, $id) {
 
-        if ( $request->user()->type != 'admin') 
+        if ( $request->user()->type != 'admin' && $request->user()->type != 'editor' ) 
             return response()->json([
                 'error' => true,
                 'message' => 'You do not have the authority to perform this action'
