@@ -233,6 +233,7 @@ class UserController extends Controller
             'type' => 'required|in:viewer,researcher,reviewer,admin,editor',
             'admin_email' => 'required|email|exists:users',
             'degrees' => 'required_if:type,researcher|array',
+            'status' => 'required|in:approved,awaiting'
         ]);
 
         if ( $request->type === "researcher" ) {
@@ -267,6 +268,7 @@ class UserController extends Controller
         $newUser->type = $request->type;
         $newUser->password = Hash::make($request->password);
         $newUser->admin_email = $request->admin_email;
+        $newUser->status = $request->status;
         $newUser->save();
 
         if ($request->type == "researcher"){
