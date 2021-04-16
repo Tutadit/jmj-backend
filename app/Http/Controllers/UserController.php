@@ -486,7 +486,7 @@ class UserController extends Controller
            ], 401);
 
         return response()->json([
-            'user' => User::where('status', 'awaiting')->get()
+            'users' => User::where('status', 'awaiting')->get()
         ]);
     }
 }
