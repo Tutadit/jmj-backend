@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             PaperSeeder::class,
             PaperJournalSeeder::class,            
             ReviewSeeder::class,
-            AssignedSeeder::class,
+            AssignedsSeeder::class,
             
         ]);
     }
