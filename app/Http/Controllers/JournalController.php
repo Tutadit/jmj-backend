@@ -63,8 +63,25 @@ class JournalController extends Controller
     }
 
     public function getAllJournals(Request $request) {
+
+
+        if ($request->user()->type == 'editor') {         
+
+            // return error message        
+            return response()->json([
+                'success' => true,
+                'journals'=> Journal::where('editor_email',$request->user()->email)->get(),
+            ]);
+        } elseif ($request->user()->type == 'admin') {                        
+            
+            return response()->json([
+                'success' => true,
+                'journals' => Journal::all()
+            ]);
+        }       
         return response()->json([
-            'journals'=> Journal::all(),
+            'success' => true,
+            'journals'=> Journal::where('status','approved')->get(),
         ]);
     }
 
