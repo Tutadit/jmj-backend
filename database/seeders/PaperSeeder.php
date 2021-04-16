@@ -17,7 +17,7 @@ class PaperSeeder extends Seeder
         DB::table('papers')->insert([
             'title' => 'Paper of number 1',
             'status' => 'published',
-            'file_path' => 'paper1.pdf',
+            'file_path' => 'file1.pdf',
             'researcher_email' => 'researcher@mail.com',
             'editor_email' => 'editor@mail.com',
             'em_name' => 'Number Eval'
@@ -26,7 +26,7 @@ class PaperSeeder extends Seeder
         DB::table('papers')->insert([
             'title' => 'Paper of number 2',
             'status' => 'pending_minor_revision',
-            'file_path' => 'paper1.pdf',
+            'file_path' => 'file2.pdf',
             'researcher_email' => 'researcher@mail.com',
             'editor_email' => 'editor@mail.com',
             'em_name' => 'Number Eval'
@@ -35,7 +35,7 @@ class PaperSeeder extends Seeder
         DB::table('papers')->insert([
             'title' => 'Paper of number 3',
             'status' => 'pending_major_revision',
-            'file_path' => 'paper1.pdf',
+            'file_path' => 'file3.pdf',
             'researcher_email' => 'researcher@mail.com',
             'editor_email' => 'editor@mail.com',
             'em_name' => 'Number Eval'
@@ -44,7 +44,7 @@ class PaperSeeder extends Seeder
         DB::table('papers')->insert([
             'title' => 'Paper of number 4',
             'status' => 'pending_publication',
-            'file_path' => 'paper1.pdf',
+            'file_path' => 'file4.pdf',
             'researcher_email' => 'researcher@mail.com',
             'editor_email' => 'editor@mail.com',
             'em_name' => 'Number Eval'
@@ -53,7 +53,7 @@ class PaperSeeder extends Seeder
         DB::table('papers')->insert([
             'title' => 'Paper of number 5',
             'status' => 'published',
-            'file_path' => 'paper1.pdf',
+            'file_path' => 'file1.pdf',
             'researcher_email' => 'researcher@mail.com',
             'editor_email' => 'editor@mail.com',
             'em_name' => 'Number Eval'
@@ -62,7 +62,7 @@ class PaperSeeder extends Seeder
         DB::table('papers')->insert([
             'title' => 'Paper of number 6',
             'status' => 'published',
-            'file_path' => 'paper1.pdf',
+            'file_path' => 'file2.pdf',
             'researcher_email' => 'researcher@mail.com',
             'editor_email' => 'editor@mail.com',
             'em_name' => 'Number Eval'
@@ -71,7 +71,7 @@ class PaperSeeder extends Seeder
         DB::table('papers')->insert([
             'title' => 'Paper of number 7',
             'status' => 'published',
-            'file_path' => 'paper1.pdf',
+            'file_path' => 'file3.pdf',
             'researcher_email' => 'researcher@mail.com',
             'editor_email' => 'editor@mail.com',
             'em_name' => 'Number Eval'
@@ -80,7 +80,7 @@ class PaperSeeder extends Seeder
         DB::table('papers')->insert([
             'title' => 'Paper of number 8',
             'status' => 'published',
-            'file_path' => 'paper1.pdf',
+            'file_path' => 'file4.pdf',
             'researcher_email' => 'researcher@mail.com',
             'editor_email' => 'editor@mail.com',
             'em_name' => 'Number Eval'

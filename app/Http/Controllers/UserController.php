@@ -92,7 +92,7 @@ class UserController extends Controller
         else
             $user->status ='awaiting';
 
-            
+
         $user->save();
         
         if ($request->type == "researcher"){
@@ -311,7 +311,7 @@ class UserController extends Controller
         return response()->json([
             'error' => true,
             'message' => 'User with id ' . $id . ' does not exist'
-        ]);
+        ],404);
 
         $validated = $request->validate([
             'email' => 'email|exclude_if:email,'.$user->email .'|unique:users',

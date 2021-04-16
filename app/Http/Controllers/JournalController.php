@@ -67,6 +67,7 @@ class JournalController extends Controller
                 'title' => $journal->title,
                 'published_date' => $journal->published_date,
                 'status' => $journal->status,
+                'admin_email' => $journal->admin_email,
                 'papers' => $papers
             ]
         ]);
@@ -123,10 +124,7 @@ class JournalController extends Controller
             'status'=>'in:pending,approved,rejected',
             'admin_email'=>'email|exists:users'
         ]);
-
-            
-
-        
+                    
 
         if ($request->has('title'))
             $journal->title = $request->title;
@@ -157,11 +155,11 @@ class JournalController extends Controller
 
         $journal = Journal::find($id);
 
-        if (!$journal)
-            return response()->json([
-                'error' => true,
-                'message' => 'Journal of id ' . $id . 'not found'
-            ],404);
+            if (!$journal)
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Journal of id ' . $id . 'not found'
+                ],404);
 
         $journal->delete();
         
@@ -170,4 +168,69 @@ class JournalController extends Controller
         ]);
 
     }
+
+
+    public function addPaperToJournal(Request $request, $id) {
+        if ( $request->user()->type != 'admin' && $request->user()->type != 'editor') 
+            return response()->json([
+                'error' => true,
+                'message' => 'You do not have the authority to perform this action'
+            ], 401);
+        
+        $request->validate([
+            'paper_id' => 'required|exists:papers,id',
+        ]);
+
+        $journal = Journal::find($id);
+        $paper = Paper::find($request->paper_id);
+        if (!$journal)
+            return response()->json([
+                'error' => true,
+                'message' => 'Journal of id ' . $id . 'not found'
+            ],404);
+
+        $paperJournal = new PaperJournal;
+        $paperJournal->paper_id = $request->paper_id;
+        $paperJournal->journal_id = $id;
+        $paperJournal->save();
+        
+        return response()->json([
+            'success' => true,
+            'paper' => $paper
+        ]);
+        
+    }
+
+    public function removePaperFromJournal(Request $request, $id) {
+        if ( $request->user()->type != 'admin' && $request->user()->type != 'editor') 
+            return response()->json([
+                'error' => true,
+                'message' => 'You do not have the authority to perform this action'
+            ], 401);
+        
+        $request->validate([
+            'paper_id' => 'required|exists:papers,id',
+        ]);
+
+        $journal = Journal::find($id);
+        $paper = Paper::find($request->paper_id);
+        if (!$journal)
+            return response()->json([
+                'error' => true,
+                'message' => 'Journal of id ' . $id . 'not found'
+            ],404);
+
+        $paperJournal = PaperJournal::where('paper_id',$request->paper_id)
+                        ->where('journal_id',$id)->first();
+
+        if ($paperJournal)        
+            $paperJournal->delete();
+
+        return response()->json([
+            'success' => true,            
+        ]);
+
+    }
+
+
 }

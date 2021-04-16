@@ -45,6 +45,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/journals/{id}/edit',[JournalController::class,'editJournal']);
     Route::post('/journals/{id}/remove',[JournalController::class,'removeJournal']);
     Route::post('/journals/{id}/change_status',[JournalController::class,'changeStatusJournal']);
+    Route::post('/journals/{id}/add_paper',[JournalController::class,'addPaperToJournal']);
+    Route::post('/journals/{id}/remove_paper',[JournalController::class,'removePaperFromJournal']);
+
 
     Route::get('/paper/all', [PaperController::class,'getAllPapers']);
     Route::get('/paper/{id}', [PaperController::class,'getPaperById']);
