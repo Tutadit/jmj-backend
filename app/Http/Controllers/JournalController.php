@@ -25,6 +25,7 @@ class JournalController extends Controller
             $Journal -> title=$request->title;
             $Journal -> published_date=$request->published_date;
             $Journal -> status='pending';    // status
+            $Journal -> editor_email = $request->user()->email;
             // timstamp autogen
             $Journal -> admin_email='admin@mail.com';//$request->user()->admin_email;  // admin_email
             $Journal -> save();                
@@ -35,7 +36,8 @@ class JournalController extends Controller
                 'title' => 'required',
                 'published_date' => 'required|date_format:Y-m-d',  
                 'status' => 'required|in:pending,approved,rejected',
-                'admin_email' => 'required|exists:users,email'
+                'admin_email' => 'required|email|exists:users,email',
+                'editor_email' => 'required|email|exists:users,email',
             ]);
 
             // add to journal
@@ -43,7 +45,7 @@ class JournalController extends Controller
             $Journal -> title=$request->title;
             $Journal -> published_date=$request->published_date;
             $Journal -> status = $request->status;
-
+            $Journal -> editor_email = $request->editor_email;
             // timstamp autogen
             $Journal -> admin_email=$request->admin_email;//$request->user()->admin_email;  // admin_email
             $Journal -> save();   

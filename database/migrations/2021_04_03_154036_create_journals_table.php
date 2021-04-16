@@ -20,9 +20,12 @@ class CreateJournalsTable extends Migration
             $table->set('status', ['pending', 'approved', 'rejected']);
             $table->timestamps();                   // Journals[created_On, last_Updated]
             $table->string('admin_email');
+            $table->string('editor_email');
 
             // foreign
             $table->foreign('admin_email')->references('email')->on('users')->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->foreign('editor_email')->references('email')->on('users')->onUpdate('cascade')
             ->onDelete('cascade');
 
             // unique title and 'published_date'
