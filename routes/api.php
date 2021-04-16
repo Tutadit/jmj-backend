@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\PaperController;
+use App\Http\Controllers\AssignedsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +67,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/reviews/{id}',[ReviewController::class,'getReviewsForPaper']);
     Route::post('/reviews/{id}',[ReviewController::class,'approveRejectReview']);
 
-    Route::post('/assigned/new',[AssignedController::class,'assignReviewer']);
-    Route::get('/assigned/reviewer/{id}', [AssignedController::class, 'getAllPapersAssignedToReviewer']);
+    Route::post('/assigned/new',[AssignedsController::class,'assignReviewer']);
+    Route::get('/assigned/reviewer/{id}', [AssignedsController::class, 'getAllPapersAssignedToReviewer']);
 });
