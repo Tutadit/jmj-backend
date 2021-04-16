@@ -12,29 +12,52 @@ class JournalController extends Controller
 {
     public function createJournal(Request $request) {
         // check user is editor
-        if ($request->user()->type != 'editor' && $request->user()->type != 'admin') {
-            // return error message
+        if ($request->user()->type == 'editor') {         
+
+            // validate user is an editor or admin
+            $validated = $request->validate([
+                'title' => 'required',
+                'published_date' => 'required|date_format:Y-m-d',            
+            ]);
+
+            // add to journal
+            $Journal = new Journal;
+            $Journal -> title=$request->title;
+            $Journal -> published_date=$request->published_date;
+            $Journal -> status='pending';    // status
+            // timstamp autogen
+            $Journal -> admin_email='admin@mail.com';//$request->user()->admin_email;  // admin_email
+            $Journal -> save();                
+        } elseif ($request->user()->type == 'admin') {
+            
+            // validate user is an editor or admin
+            $validated = $request->validate([
+                'title' => 'required',
+                'published_date' => 'required|date_format:Y-m-d',  
+                'status' => 'required|in:pending,approved,rejected',
+                'admin_email' => 'required|exists:users,email'
+            ]);
+
+            // add to journal
+            $Journal = new Journal;
+            $Journal -> title=$request->title;
+            $Journal -> published_date=$request->published_date;
+            $Journal -> status = $request->status;
+
+            // timstamp autogen
+            $Journal -> admin_email=$request->admin_email;//$request->user()->admin_email;  // admin_email
+            $Journal -> save();   
+            
+            return response()->json([
+                'success' => true,
+                'journal' => $Journal
+            ]);
+        } else 
+                // return error message
             return response()->json([
                 'error'=>true,      // key
                 'message'=>'only an editor or an admin can access this',
-            ], 401);
-        } 
-
-        // validate user is an editor or admin
-        $validated = $request->validate([
-            'title' => 'required',
-            'published_date' => 'required|date_format:Y-m-d',
-        ]);
-
-        // add to journal
-        $Journal = new Journal;
-        $Journal -> title=$request->title;
-        $Journal -> published_date=$request->published_date;
-        $Journal -> status='pending';    // status
-        // timstamp autogen
-        $Journal -> admin_email='admin@mail.com';//$request->user()->admin_email;  // admin_email
-        $Journal -> save();                
-        
+            ], 401);        
     }
 
     public function getAllJournals(Request $request) {
