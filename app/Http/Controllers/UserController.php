@@ -476,4 +476,17 @@ class UserController extends Controller
             'success' => true,
         ]);
     }
+
+
+    public function getSignUps(Request $request) {
+        if ( $request->user()->type != 'admin'  && $request->user()->type != 'editor' ) 
+            return response()->json([
+                'error' => true,
+                'message' => 'You do not have the authority to perform this action'
+           ], 401);
+
+        return response()->json([
+            'user' => User::where('status', 'awaiting')->get()
+        ]);
+    }
 }
