@@ -13,7 +13,7 @@ class CreateAssignedTable extends Migration
      */
     public function up()
     {
-        Schema::create('assigned', function (Blueprint $table) {
+        Schema::create('assigneds', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('paper_id');              
             $table->string('researcher_email');
@@ -30,7 +30,7 @@ class CreateAssignedTable extends Migration
             $table->foreign('reviewer_email')->references('email')->on('users')->onUpdate('cascade')
             ->onDelete('cascade');
 
-            // primary
+        // primary
             $table->index(['paper_id', 'researcher_email', 'reviewer_email']);
         });
     }
@@ -42,6 +42,6 @@ class CreateAssignedTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('assigneds');
+        Schema::dropIfExists('assigned');
     }
 }

@@ -15,7 +15,7 @@ class AssignedsSeeder extends Seeder
     public function run()
     {
         //
-        DB::table('assigned')->insert([
+        DB::table('assigneds')->insert([
             'paper_id' => '1',
             'researcher_email' => 'researcher@mail.com',
             'reviewer_email' => 'reviewer@mail.com',
@@ -23,7 +23,7 @@ class AssignedsSeeder extends Seeder
             'major_rev_deadline' => '2020-01-03'
         ]);
 
-        DB::table('assigned')->insert([
+        DB::table('assigneds')->insert([
             'paper_id' => '2',
             'researcher_email' => 'researcher1@mail.com',
             'reviewer_email' => 'reviewer1@mail.com',
