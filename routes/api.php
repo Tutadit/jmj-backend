@@ -38,6 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/users/{id}/degrees',[UserController::class,'getUserDegrees']);
     Route::post('/users/{id}/degrees/new',[UserController::class,'addDegree']);
     Route::post('/users/{id}/degrees/delete',[UserController::class,'removeDegree']);
+    Route::get('/users/signups',[UserController::class,'getSignUps']);
 
     Route::post('/tokens/create', [UserController::class,'createToken']);
     Route::post('/tokens/delete', [UserController::class,'deleteToken']);
