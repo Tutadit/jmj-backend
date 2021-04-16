@@ -403,4 +403,77 @@ class UserController extends Controller
 
     }
     
+
+    public function addDegree(Request $request, $id) {
+
+        if ( $request->user()->type != 'admin' && $request->user()->id != id) 
+            return response()->json([
+                'error' => true,
+                'message' => 'You do not have the authority to perform this action'
+           ], 401);
+
+        $request->validate([
+            'title'=>'required|string',
+            'institution'=>'required|string',
+            'received'=>'required|string',
+        ]);
+
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'error' => true,
+                'message' => 'User with id '.$id.' does not exist'
+            ],404);
+        }
+
+        $deg = new Degree;
+        $deg->title = $request->title;
+        $deg->received = $request->received;
+        $deg->institution = $request->institution;
+        $deg->researcher_email = $user->email;
+        $deg->save();
+
+        return response()->json([
+            'success' => true,
+        ]);
+
+    }
+
+    public function removeDegree(Request $request, $id) {
+        if ( $request->user()->type != 'admin' && $request->user()->id != id) 
+            return response()->json([
+                'error' => true,
+                'message' => 'You do not have the authority to perform this action'
+           ], 401);
+
+        $request->validate([
+            'degree_id'=>'required|exists:degrees,id',
+        ]);
+
+
+        $user = User::find($id);
+
+
+        if (!$user) {
+            return response()->json([
+                'error' => true,
+                'message' => 'User with id '.$id.' does not exist'
+            ]);
+        }
+
+        $degree = Degree::find($request->degree_id);
+
+        if (!$degree)
+            return response()->json([
+                'error' => true,
+                'message' => 'Degree with id '.$request->degree_id.' does not exist'
+            ]);
+
+        $degree->delete();
+
+        return response()->json([
+            'success' => true,
+        ]);
+    }
 }
