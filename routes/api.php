@@ -52,10 +52,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
     Route::get('/paper/all', [PaperController::class,'getAllPapers']);
+    Route::get('/paper/withdrawn',[PaperController::class,'getPapersWithdrawn']);
     Route::get('/paper/by_researcher/{id}', [PaperController::class, 'getAllPapersByResearcher']);
     Route::get('/paper/{id}', [PaperController::class,'getPaperById']);
     Route::post('/paper/{id}/edit', [PaperController::class,'editPaper']);
-    Route::get('/paper/{id}/status',[PaperController::class,'getPaperStatus']);
+    Route::get('/paper/{id}/status',[PaperController::class,'getPaperStatus']);    
     Route::post('/paper/{id}/withdraw',[PaperController::class,'withdrawPaper']);
     Route::post('/paper/{id}/request_withdraw',[PaperController::class,'requestWithdrawPaper']);
     Route::post('/paper/upload', [PaperController::class,'uploadPaper']);

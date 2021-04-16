@@ -40,8 +40,50 @@ class PaperController extends Controller
         return;
     }
 
+    public function getPapersWithdrawn(Request $request) {
+        if ($request->user()->type != 'admin') {
+            return response()->json([
+                'error' => true,
+                'message' => 'You are not alloweed to view this section'
+            ], 401);
+        } 
+
+        return response()->json([
+            'papers' => Paper::where('status','withdraw_request')
+                            ->orWhere('status','withdrawn')->get()
+        ]);
+    }
+
     public function withdrawPaper(Request $request, $id) {
-        return;
+        if ($request->user()->type != 'admin') {
+            return response()->json([
+                'error' => true,
+                'message' => 'You are not alloweed to view this section'
+            ], 401);
+        } 
+        
+        $paper = Paper::find($id);
+
+        if (!$paper)
+            return response()->json([
+                'error' => true,
+                'message' => 'Paper withdrawPaper id ' . $id . 'does not exist'
+            ]);
+        
+        $request->validate([
+            'approved' => 'boolean'
+        ]);
+
+        if ($request->has('approved'))        
+            $paper->status = $request->approved ? 'withdrawn' : 'withdraw_request';
+        else
+            $paper->status = 'withdrawn';
+
+        $paper->save();
+        
+        return response()->json([
+            'success' => true,
+        ]);
     }
 
     public function requestWithdrawPaper(Request $request, $id) {
