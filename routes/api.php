@@ -39,6 +39,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/users/{id}/degrees',[UserController::class,'getUserDegrees']);
     Route::post('/users/{id}/degrees/new',[UserController::class,'addDegree']);
     Route::post('/users/{id}/degrees/delete',[UserController::class,'removeDegree']);
+    Route::post('/users/{id}/change_status',[UserController::class,'changeStatus']);
 
     Route::post('/tokens/create', [UserController::class,'createToken']);
     Route::post('/tokens/delete', [UserController::class,'deleteToken']);
@@ -72,4 +73,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/assigned/new',[AssignedsController::class,'assignReviewer']);
     Route::get('/assigned/reviewer/{id}', [AssignedsController::class, 'getAllPapersAssignedToReviewer']);
+    Route::get('/assigned/get_reviewer/{id}', [AssignedsController::class, 'getPaperReviewer']);
 });
