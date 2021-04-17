@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Paper;
 use App\Models\User;
+use App\Models\Withdraw;
 use App\Models\NominatedReviewer;
 
 class PaperController extends Controller
@@ -116,15 +117,16 @@ class PaperController extends Controller
                 ],401);
 
             $paper = new Paper;
+            
             $paper->title = $request->title;  
             $path = str_replace('public/','',$request->file->store('public'));                  
             $paper->file_path = $path;  
             $paper->researcher_email = $request->user()->email;
             $paper->editor_email = 'editor@mail.com';   
             $paper->em_name = 'Number Eval';
-            $paper->status = 'pending_minor_revision';
+            $paper->status = 'pending_minor_revision';            
             $paper->save();
-
+            
             return response()->json([
                 'success' => true,
                 'paper' => $paper
@@ -139,7 +141,26 @@ class PaperController extends Controller
     }
 
     public function getPaperStatus(Request $request, $id) {
-        return;
+        
+        if ( $request->user()->type != 'admin' && $request->user()->type != 'editor')
+            return response()->json([
+                'error' => true,
+                'message' => 'You are not allowed to view this section'
+            ],401);
+
+        $paper = Paper::find($id);
+
+        if (!$paper) 
+            return response()->json([
+                'error' => true,
+                'message' => 'Paper with id ' . $id . 'does not exist'
+            ]);
+
+        return response()->json([
+            'success' => true,
+            'status' => $paper->status
+        ]);
+
     }
 
     public function getPapersWithdrawn(Request $request) {
@@ -189,7 +210,32 @@ class PaperController extends Controller
     }
 
     public function requestWithdrawPaper(Request $request, $id) {
-        return;
+        if ( $request->user()->type != 'researcher') 
+            return response()->json([
+                'error' => true,
+                'message' => 'you do not have permission to perform that action'
+            ], 401);
+        
+        $paper = Paper::find($id);
+
+        if ( !$paper )
+            return response()->json([
+                'error' => true,
+                'message' => 'Paper with id of ' . $id . ' does not exist'
+            ], 404);
+        
+        if ( $paper->researcher_email != $request->user()->email)
+            return response()->json([
+                'error' => true,
+                'message' => 'You do not own this paper'
+            ],401);
+
+        $paper->status = 'withdraw_request';
+        $paper->save();
+
+        return response()->json([
+            'success' => true,
+        ]);
     }
 
     public function editPaper(Request $request, $id) {
