@@ -95,7 +95,7 @@ class PaperController extends Controller
 
         return response()->json([
             'error' => true,
-            'message' => 'You are not alloweed to view this section'
+            'message' => 'You are not allowed to view this section'
         ], 401);
     }
 
@@ -199,7 +199,7 @@ class PaperController extends Controller
             $paper = Paper::find($id);
 
             if (!$paper)
-                return response->json([
+                return response()->json([
                     'error' => true,
                     'message' => 'paper with id '. $id . 'does not exist'
                 ]);
