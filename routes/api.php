@@ -73,4 +73,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/assigned/new',[AssignedsController::class,'assignReviewer']);
     Route::get('/assigned/reviewer/{id}', [AssignedsController::class, 'getAllPapersAssignedToReviewer']);
+    Route::get('/assigned/get_reviewer/{id}', [AssignedsController::class, 'getPaperReviewer']);
 });
