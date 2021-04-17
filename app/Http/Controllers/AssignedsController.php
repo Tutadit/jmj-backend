@@ -22,13 +22,6 @@ class AssignedsController extends Controller
                     'message' => 'User not found'
                 ], 404);
             }
-            /*if ($rev->type == 'reviewer') {
-                return response()->json([
-                    'papers' => Assigned::where('reviewer_email', $rev->email)->get(),
-                ]);
-            } else if($rev->type == 'researcher') {
-                return;
-            }*/
 
             return response()->json([
                 'assigned' => Assigned::where('reviewer_email', $rev->email)->get(),
@@ -52,9 +45,9 @@ class AssignedsController extends Controller
                 ], 404);
             }
 
-            return response()->json({
-                'reviewer_email' => Assigned::where('id', $paper->id)->get(),
-            });
+            /*return response()->json({
+                'reviewer_email' => Assigned::where('paper_id', $paper->id)->get(),
+            })*/
 
         }
         
