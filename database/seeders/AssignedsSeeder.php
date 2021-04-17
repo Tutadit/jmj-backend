@@ -25,7 +25,7 @@ class AssignedsSeeder extends Seeder
 
         DB::table('assigneds')->insert([
             'paper_id' => '2',
-            'researcher_email' => 'researcher1@mail.com',
+            'researcher_email' => 'researcher@mail.com',
             'reviewer_email' => 'reviewer1@mail.com',
             'minor_rev_deadline' => '2020-01-02',
             'major_rev_deadline' => '2020-01-03'
