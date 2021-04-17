@@ -41,4 +41,27 @@ class AssignedsController extends Controller
             'message' => 'You are not alloweed to view this section'
         ], 401);
     }
+
+    public function getPaperReviewer(Request $request, $id) {
+        if ($request->user()->type == 'editor') {
+            $paper = Paper::find($id);
+            if(!$paper) {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'paper not found'
+                ], 404);
+            }
+
+            return response()->json({
+                'reviewer_email' => Assigned::where('id', $paper->id)->get(),
+            });
+
+        }
+        
+        return response()->json([
+            'error' => true,
+            'message' => 'You are not alloweed to view this section'
+        ], 401);
+    }
+
 }
