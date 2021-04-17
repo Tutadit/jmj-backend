@@ -7,77 +7,79 @@ use App\Models\Paper;
 use App\Models\User;
 use App\Models\Withdraw;
 use App\Models\NominatedReviewer;
+use App\Models\Assigned;
 
 class PaperController extends Controller
 {
     public function getPaperById(Request $request, $id) {
-        if ($request->user()->type == 'editor') {
 
-            $paper = Paper::find($id);
+        $paper = Paper::find($id);
 
-            if (!$paper) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'Paper with id ' . $id . ' not found'
-                ],404);
-            }
-
-            if ($paper->editor_email != $request->user()->email) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'You are not alloweed to view this section'
-                ],401);
-            }
-
+        if (!$paper) {
             return response()->json([
-                'success' => true,
-                'paper' => $paper
-            ]);
-        } else if ($request->user()->type == 'researcher') {
-            $paper = Paper::find($id);
-
-            if (!$paper) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'Paper with id ' . $id . ' not found'
-                ],404);
-            }
-
-            if ($paper->researcher_email != $request->user()->email) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'You are not alloweed to view this section'
-                ],401);
-            }
-
-            $nominated = NominatedReviewer::where('researcher_email',$request->user()->email)->get();
-
-            return response()->json([
-                'success' => true,
-                'paper' => $paper,
-                'nominated' => $nominated
-            ]);
-
-        } else if ($request->user()->type == 'admin') {
-            $paper = Paper::find($id);
-
-            if (!$paper) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'Paper with id ' . $id . ' not found'
-                ],404);
-            }
-
-            return response()->json([
-                'success' => true,
-                'paper' => $paper
-            ]);
+                'error' => true,
+                'message' => 'Paper with id ' . $id . ' not found'
+            ],404);
         }
 
+        if ( $paper->status !== 'published') {
+            if ($request->user()->type == 'editor') {            
+                if ($paper->editor_email != $request->user()->email)
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'You are not alloweed to view this section'
+                    ],401);        
+            } else if ($request->user()->type == 'researcher') {
+                if ($paper->researcher_email != $request->user()->email) {
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'You are not alloweed to view this section'
+                    ],401);
+                }
+            } else if ($request->user()->type != 'admin')
+                return response()->json([
+                    'error' => true,
+                    'message' => 'You are not allowed to view this section'
+                ]);
+        }   
+
+
+        $nominated = NominatedReviewer::where('paper_id',$id)
+        ->join('users','users.email','nominated_reviewers.reviewer_email')
+        ->selectRaw('CONCAT(first_name, CONCAT(" ", last_name)) as reviewer, users.id as reviewer_id, reviewer_email')->get();
+
+        $assigned = Assigned::where('paper_id',$id)
+        ->join('users','users.email','assigneds.reviewer_email')
+                    ->selectRaw('CONCAT(first_name, CONCAT(" ", last_name)) as reviewer, users.id as reviewer_id, reviewer_email')->get();
+        
+        $researcher = User::where('email',$paper->researcher_email)->first();
+        $editor = User::where('email',$paper->editor_email)->first(); 
+
+        if ( !$researcher || !$editor ) 
+            return response()->json([
+                'error' => true,
+                'message' => 'This paper is wild and free, not meant for you'
+            ], 422);
+
+
         return response()->json([
-            'error' => true,
-            'message' => 'You are not alloweed to view this section'
-        ],401);
+            'success' => true,
+            'paper' =>  array(
+                    'id' => $paper->id,
+                    'title' => $paper->title,
+                    'status' => $paper->status,
+                    'file_path' => $paper->file_path,
+                    'researcher' => $researcher->first_name . " " . $researcher->last_name,
+                    'researcher_id' => $researcher->id,
+                    'editor' => $editor->first_name . " " . $editor->last_name,
+                    'editor_id' => $editor->id,
+                    'editor_email' => $editor->email,
+                    'researcher_email' => $researcher->email
+            ),
+            'nominated' => $nominated,
+            'assigned' => $assigned                
+        ]);
+        
     }
 
     public function getAllPapersByResearcher(Request $request, $id) {
@@ -89,8 +91,24 @@ class PaperController extends Controller
                     'message' => 'User not found'
                 ], 404);
             }
+
+            $papers = Paper::where('researcher_email', $researcher->email);
+            $papers = User::joinSub($papers,'papers', function($join){
+                $join->on('users.email', '=', 'papers.researcher_email');
+            })
+            ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, 
+                        CONCAT(first_name,CONCAT(" ",last_name)) as researcher, users.id as researcher_id');
+            $papers = User::joinSub($papers,'papers', function($join){
+                $join->on('users.email', '=', 'papers.editor_email');
+            })
+            ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, 
+                        researcher_id, researcher,
+                        CONCAT(first_name,CONCAT(" ",last_name)) as editor, users.id as editor_id')
+            ->get();
+            
+
             return response()->json([
-                'papers' => Paper::where('researcher_email', $researcher->email)->get(),
+                'papers' => $papers,
             ]);
         } 
 
@@ -127,9 +145,29 @@ class PaperController extends Controller
             $paper->status = 'pending_minor_revision';            
             $paper->save();
             
+             
+            $researcher = User::where('email',$paper->researcher_email)->first();
+            $editor = User::where('email',$paper->editor_email)->first();   
+        
+        if ( !$researcher || !$editor ) 
+            return response()->json([
+                'error' => true,
+                'message' => 'This paper is wild and free, not meant for you'
+            ], 422);
             return response()->json([
                 'success' => true,
-                'paper' => $paper
+                'paper' => array(
+                    'id' => $paper->id,
+                    'title' => $paper->title,
+                    'status' => $paper->status,
+                    'file_path' => $paper->file_path,
+                    'researcher' => $researcher->first_name . " " . $researcher->last_name,
+                    'researcher_id' => $researcher->id,
+                    'editor' => $editor->first_name . " " . $editor->last_name,
+                    'editor_id' => $editor->id,
+                    'editor_email' => $editor->email,
+                    'researcher_email' => $researcher->email
+                )
             ]);            
 
         }
@@ -171,9 +209,24 @@ class PaperController extends Controller
             ], 401);
         } 
 
+
+        $papers = Paper::where('status','withdraw_request')
+        ->orWhere('status','withdrawn');
+        $papers = User::joinSub($papers,'papers', function($join){
+            $join->on('users.email', '=', 'papers.researcher_email');
+        })
+        ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, 
+                    CONCAT(first_name,CONCAT(" ",last_name)) as researcher, users.id as researcher_id');
+        $papers = User::joinSub($papers,'papers', function($join){
+            $join->on('users.email', '=', 'papers.editor_email');
+        })
+        ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, 
+                    researcher_id, researcher,
+                    CONCAT(first_name,CONCAT(" ",last_name)) as editor, users.id as editor_id')
+        ->get();
+
         return response()->json([
-            'papers' => Paper::where('status','withdraw_request')
-                            ->orWhere('status','withdrawn')->get()
+            'papers' => $papers
         ]);
     }
 
@@ -292,23 +345,36 @@ class PaperController extends Controller
 
     public function getAllPapers(Request $request) {
 
-        if ($request->user()->type == 'admin') {
-            return response()->json([
-                'papers' => Paper::all()
-            ]);
-        } else if ($request->user()->type == 'editor') {            
-            return response()->json([
-                'papers' => Paper::where('editor_email', $request->user()->email)->get()
-            ]);
-        } else if ($request->user()->type == 'researcher') {
-            return response()->json([
-                'papers' => Paper::where('researcher_email', $request->user()->email)->get()
-            ]);
+        $papers;
+
+        if ($request->user()->type == 'admin') {            
+                $papers = Paper::select('*');
+        } else if ($request->user()->type == 'editor') {                        
+                $papers = Paper::where('editor_email', $request->user()->email)
+                ->orWhere('status','approved');
+        } else if ($request->user()->type == 'researcher') {            
+                $papers = Paper::where('researcher_email', $request->user()->email)
+                        ->orWhere('status','approved');;
+        } else {
+            $papers = Paper::where('status','approved');
         }
 
+        $papers = User::joinSub($papers,'papers', function($join){
+            $join->on('users.email', '=', 'papers.researcher_email');
+        })
+        ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, 
+                    CONCAT(first_name,CONCAT(" ",last_name)) as researcher, users.id as researcher_id');
+        $papers = User::joinSub($papers,'papers', function($join){
+            $join->on('users.email', '=', 'papers.editor_email');
+        })
+        ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, 
+                    researcher_id, researcher,
+                    CONCAT(first_name,CONCAT(" ",last_name)) as editor, users.id as editor_id')
+        ->get();
+
         return response()->json([
-            'error' => true,
-            'message' => 'You are not alloweed to view this section'
+            'success' => true,
+            'papers' => $papers
         ], 401);
     }
 }
