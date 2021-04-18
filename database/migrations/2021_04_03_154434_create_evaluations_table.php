@@ -18,15 +18,15 @@ class CreateEvaluationsTable extends Migration
             $table->string('answer');
             $table->timestamps();
             $table->unsignedBigInteger('review_id');   
-            $table->string('metric_question');
+            $table->unsignedBigInteger('metric_id');
 
             // 
 
             $table->foreign('review_id')->references('id')->on('reviews')->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->foreign('metric_question')->references('question')->on('metrics')->onUpdate('cascade')
+            $table->foreign('metric_id')->references('id')->on('metrics')->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->unique('metric_question');
+            $table->unique('metric_id');
             //
             $table->index(['review_id']);
         });

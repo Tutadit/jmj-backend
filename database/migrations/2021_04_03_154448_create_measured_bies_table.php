@@ -15,17 +15,8 @@ class CreateMeasuredBiesTable extends Migration
     {
         Schema::create('measured_bies', function (Blueprint $table) {
             $table->id();
-            $table->string('em_name');
-            $table->string('metric_question');
             $table->timestamps();
 
-            //
-            $table->foreign('metric_question')->references('metric_question')->on('evaluations')->onUpdate('cascade')
-            ->onDelete('cascade'); 
-            //TODO: check this is the foreign key
-
-            // primary
-            $table->index(['em_name', 'metric_question']);
 
         });
     }

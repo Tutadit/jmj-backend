@@ -9,6 +9,8 @@ use App\Models\Withdraw;
 use App\Models\NominatedReviewer;
 use App\Models\Assigned;
 use App\Models\Withdrawl;
+use App\Models\EvaluationMetric;
+use App\Models\Metric;
 
 class PaperController extends Controller
 {
@@ -58,13 +60,16 @@ class PaperController extends Controller
 
         $researcher = User::where('email', $paper->researcher_email)->first();
         $editor = User::where('email', $paper->editor_email)->first();
+        $evaluation_metric = EvaluationMetric::where('name', $paper->em_name)->first();
 
-        if (!$researcher || !$editor)
+        if (!$researcher || !$editor || !$evaluation_metric)
             return response()->json([
                 'error' => true,
                 'message' => 'This paper is wild and free, not meant for you'
             ], 422);
-
+        
+        
+        $metrics = Metric::where('em_id',$evaluation_metric->id)->get();
 
         return response()->json([
             'success' => true,
@@ -79,11 +84,14 @@ class PaperController extends Controller
                 'editor_id' => $editor->id,
                 'editor_email' => $editor->email,
                 'researcher_email' => $researcher->email,
-                'em_name' => $paper->em_name,
             ),
             'nominated' => $nominated,
             'assigned' => $assigned,
-            'withdraw' => $withdrawl ? $withdrawl->status : false
+            'withdraw' => $withdrawl ? $withdrawl->status : false,
+            'evaluation_metric' => array(
+                'name' => $evaluation_metric->name,
+                'questions' => $metrics
+            )
         ]);
     }
 
