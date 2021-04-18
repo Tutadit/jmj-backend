@@ -8,6 +8,7 @@ use App\Http\Controllers\PaperController;
 use App\Http\Controllers\AssignedsController;
 use App\Http\Controllers\NominatedReviewersController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\EvaluationMetricController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,4 +79,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/assigned/reviewer/{id}', [AssignedsController::class, 'getAllPapersAssignedToReviewer']);
     Route::get('/assigned/researcher/{id}', [AssignedsController::class, 'getAllPapersAssignedToResearcher']);
     Route::get('/assigned/reviewers/{id}', [AssignedsController::class, 'getReviewersAssignedToPaper']);
+
+
+    Route::get('/evaluation_metrics/all',[EvaluationMetricController::class,'getAll']);
+    Route::post('/evaluation_metrics/new',[EvaluationMetricController::class,'createNew']);
+    Route::get('/evaluation_metrics/{id}',[EvaluationMetricController::class,'getById']);
+    Route::post('/evaluation_metrics/{id}/edit',[EvaluationMetricController::class,'editById']);
+    Route::post('/evaluation_metrics/{id}/add_question', [EvaluationMetricController::class, 'addQuestion']);
+    Route::post('/evaluation_metrics/{id}/remove_question', [EvaluationMetricController::class, 'removeQuestion']);
+
 });
