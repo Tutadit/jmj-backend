@@ -20,15 +20,16 @@ class CreateReviewsTable extends Migration
             $table->string('reviewer_email');
             $table->unsignedBigInteger('paper_id');
             $table->string('researcher_email');
+            $table->set('status', ['approved', 'rejected', 'pending']);
             $table->timestamps();
 
             //
             $table->foreign('reviewer_email')->references('email')->on('users')->onUpdate('cascade')
-            ->onDelete('cascade');
+                ->onDelete('cascade');
             $table->foreign('paper_id')->references('id')->on('papers')->onUpdate('cascade')
-            ->onDelete('cascade');
+                ->onDelete('cascade');
             $table->foreign('researcher_email')->references('email')->on('users')->onUpdate('cascade')
-            ->onDelete('cascade');
+                ->onDelete('cascade');
 
             //
             $table->index(['id', 'reviewer_email']);

@@ -7,6 +7,7 @@ use App\Http\Controllers\JournalController;
 use App\Http\Controllers\PaperController;
 use App\Http\Controllers\AssignedsController;
 use App\Http\Controllers\NominatedReviewersController;
+use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
