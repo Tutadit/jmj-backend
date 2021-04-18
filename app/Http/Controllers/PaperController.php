@@ -379,6 +379,6 @@ class PaperController extends Controller
         return response()->json([
             'success' => true,
             'papers' => $papers
-        ], 401);
+        ]);
     }
 }
