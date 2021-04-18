@@ -77,12 +77,12 @@ class JournalController extends Controller
             $journals = Journal::join('users','journals.admin_email','users.email')
                         ->where('editor_email',$request->user()->email)
                         ->selectRaw('title, published_date,journals.status as status,
-                                users.id as admin_id,
+                                users.id as admin_id, admin_email,
                                 CONCAT(first_name,CONCAT(" ", last_name)) as admin ,editor_email');
             
             $journals = User::joinSub($journals,'journals', function ($join) {
                 $join->on('users.email','=','journals.editor_email');
-            })->selectRaw('title, published_date,journals.status as status, admin_id,
+            })->selectRaw('title, published_date,journals.status as status, admin_email, editor_email, admin_id,
             admin , CONCAT(first_name,CONCAT(" ", last_name)) as editor, users.id as editor_id')
             ->get();
 
@@ -96,12 +96,13 @@ class JournalController extends Controller
             
             $journals = Journal::join('users','journals.admin_email','users.email')                       
                         ->selectRaw('journals.id, title, published_date,journals.status as status,
-                                users.id as admin_id,
+                                users.id as admin_id, admin_email,
                                 CONCAT(first_name,CONCAT(" ", last_name)) as admin ,editor_email');
             
             $journals = User::joinSub($journals,'journals', function ($join) {
                 $join->on('users.email','=','journals.editor_email');
             })->selectRaw('journals.id, title, published_date,journals.status as status, admin_id,
+            editor_email, admin_email,
             admin , CONCAT(first_name,CONCAT(" ", last_name)) as editor, users.id as editor_id')
             ->get();
 
@@ -141,14 +142,14 @@ class JournalController extends Controller
         $papers = User::joinSub($papers, 'papers', function($join) {
             $join->on('papers.editor_email','=','users.email');
         })
-        ->selectRaw('title, papers.id as id, file_path, researcher_email,
+        ->selectRaw('title, papers.id as id, file_path, researcher_email, editor_email,
                     users.id as editor_id, CONCAT(first_name, CONCAT(" ", last_name)) as editor');
 
         $papers = User::joinSub($papers, 'papers', function($join) {
             $join->on('papers.researcher_email','=','users.email');
         })
         ->selectRaw('title, papers.id as id, file_path, researcher_email,
-                    editor, editor_id,
+                    editor, editor_id, editor_email,
                     users.id as researcher_id, CONCAT(first_name, CONCAT(" ", last_name)) as researcher')
         ->get();
 
@@ -312,18 +313,20 @@ class JournalController extends Controller
             ], 422);
         
         return response()->json([
-            'success' => true,
-            'paper' => array(
-                'id' => $paper->id,
-                'title' => $paper->title,
-                'status' => $paper->status,
-                'file_path' => $paper->file_path,
-                'researcher' => $researcher->first_name . " " . $researcher->last_name,
-                'researcher_id' => $researcher->id,
-                'editor' => $editor->first_name . " " . $editor->last_name,
-                'editor_id' => $editor->id
-            )
-        ]);
+                'success' => true,
+                'paper' => array(
+                    'id' => $paper->id,
+                    'title' => $paper->title,
+                    'status' => $paper->status,
+                    'file_path' => $paper->file_path,
+                    'researcher' => $researcher->first_name . " " . $researcher->last_name,
+                    'researcher_id' => $researcher->id,
+                    'editor' => $editor->first_name . " " . $editor->last_name,
+                    'editor_id' => $editor->id,
+                    'editor_email' => $editor->email,
+                    'researcher_email' => $researcher->email
+                )
+            ]);
         
     }
 
