@@ -49,14 +49,18 @@ class NominatedReviewersController extends Controller
         }
 
         $nomiated = new NominatedReviewer;
-        $nomiated->paper_id = $paper->id;
+        $nomiated->paper_id = $paper->id;        
         $nomiated->reviewer_email = $reviewer->email;
         $nomiated->researcher_email = $request->user()->email;
         $nomiated->save();
 
         return response()->json([
             'success' => true,  
-            'nominated' => $nomiated          
+            'nominated' => array(
+                'reviewer' => $reviewer->first_name . ' ' . $reviewer->last_name,
+                'reviewer_email' => $reviewer->email,
+                'reviewer_id' => $reviewer->id
+            )
         ]);
     }
 

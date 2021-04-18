@@ -189,12 +189,12 @@ class UserController extends Controller
     }
 
     public function getAllUsersOfType(Request $request, $type) {
-
-        if ( $request->user()->type != 'admin' && $request->user()->type != 'editor') 
-        return response()->json([
-            'error' => true,
-            'message' => 'You do not have the authority to perform this action'
-        ], 401);
+        
+        if ( $request->user()->type == 'viewer' )
+            return response()->json([
+                'error' => true,
+                'message' => 'You do not have the authority to perform this action'
+            ], 401);
 
 
         return response()->json([
