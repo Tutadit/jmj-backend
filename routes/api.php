@@ -65,14 +65,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/paper/{id}/withdraw',[PaperController::class,'withdrawPaper']);
     Route::post('/paper/{id}/request_withdraw',[PaperController::class,'requestWithdrawPaper']);
     Route::post('/paper/upload', [PaperController::class,'uploadPaper']);
+    Route::get('/paper/reviewers', [PaperController::class,'getPaperReviewers']);
 
     Route::post('/nominated/new', [NominatedReviewersController::class,'nominateForPaper']);
     Route::post('/nominated/remove', [NominatedReviewersController::class,'removeNominee']);
+    Route::get('/nominated/paper/{id}', [NominatedReviewersController::class,'getNominatedForPaper']);
 
     Route::get('/reviews/{id}',[ReviewController::class,'getReviewsForPaper']);
     Route::post('/reviews/{id}',[ReviewController::class,'approveRejectReview']);
 
     Route::post('/assigned/new',[AssignedsController::class,'assignReviewer']);
     Route::get('/assigned/reviewer/{id}', [AssignedsController::class, 'getAllPapersAssignedToReviewer']);
-    Route::get('/assigned/get_reviewer/{id}', [AssignedsController::class, 'getPaperReviewer']);
+    Route::get('/assigned/researcher/{id}', [AssignedsController::class, 'getAllPapersAssignedToResearcher']);
+    Route::get('/assigned/reviewers/{id}', [AssignedsController::class, 'getReviewersAssignedToPaper']);
 });
