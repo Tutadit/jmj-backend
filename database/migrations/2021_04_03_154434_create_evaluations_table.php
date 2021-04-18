@@ -17,18 +17,19 @@ class CreateEvaluationsTable extends Migration
             $table->id();
             $table->string('answer');
             $table->timestamps();
-            $table->unsignedBigInteger('review_id');   
             $table->unsignedBigInteger('metric_id');
-
+            $table->string('reviewer_email');
+            $table->unsignedBigInteger('paper_id');
+            $table->set('status', ['approved', 'rejected', 'pending']);
+            $table->string('editor_comments');
+            $table->string('additional_comments');
             // 
-
-            $table->foreign('review_id')->references('id')->on('reviews')->onUpdate('cascade')
-            ->onDelete('cascade');
             $table->foreign('metric_id')->references('id')->on('metrics')->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->unique('metric_id');
+            $table->foreign('paper_id')->references('id')->on('papers')->onUpdate('cascade')
+                ->onDelete('cascade');
             //
-            $table->index(['review_id']);
+            $table->index(['metric_id','paper_id','reviewer_email']);
         });
     }
 

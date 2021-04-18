@@ -11,9 +11,68 @@ use App\Models\Assigned;
 use App\Models\Withdrawl;
 use App\Models\EvaluationMetric;
 use App\Models\Metric;
+use App\Models\Evaluation;
 
 class PaperController extends Controller
 {
+
+    public function submitReview(Request $request, $id) {
+
+        $paper = Paper::find($id);        
+
+        if (!$paper) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Paper with id ' . $id . ' not found'
+            ], 404);
+        }
+
+        $assigned = Assigned::where('paper_id', $id)
+                    ->where('reviewer_email',$request->user()->email)->first();
+
+        if (!$assigned)
+            return response()->json([
+                'error' => true,
+                'message' => 'Paper not assigned to you'
+            ],401);
+
+        $request->validate([
+            'answer' => 'required|string',
+            'question_id' => 'required|exists:metrics,id'
+        ]);
+
+        $metric = Metric::find($request->question_id);
+
+        if ( !$metric ) 
+            return response()->json([
+                'error' => true,
+                'message' => 'Not well set up :/'
+            ],422);
+
+
+        $evaluation = Evaluation::where('metric_id',$metric->id)
+                                ->where('reviewer_email',$request->user()->email)
+                                ->where('paper_id', $id)
+                                ->first();
+        
+        if (!$evaluation)
+            $evaluation = new Evaluation;
+
+        $evaluation->answer = $request->answer;
+        $evaluation->metric_id = $metric->id;
+        $evaluation->reviewer_email = $request->user()->email;
+        $evaluation->paper_id = $id;
+        $evaluation->status = 'pending';
+        $evaluation->editor_comments = "";
+        $evaluation->additional_comments = "";
+        $evaluation->save();
+
+        return response()->json([
+            'evaluation' => $evaluation,
+        ]);
+        
+    }
+
     public function getPaperById(Request $request, $id)
     {
 
@@ -70,6 +129,17 @@ class PaperController extends Controller
         
         
         $metrics = Metric::where('em_id',$evaluation_metric->id)->get();
+        $evaluations = Evaluation::where('paper_id',$id)
+                        ->join('users', 'users.email','evaluations.reviewer_email')
+                        ->selectRaw('evaluations.id as id, answer, metric_id, reviewer_email, evaluations.status,
+                        editor_comments, additional_comments, CONCAT(first_name,CONCAT(" ", last_name)) as reviewer');
+
+        $evaluations = Metric::joinSub($evaluations,'evaluations', function ($join){
+            $join->on('evaluations.metric_id','=','metrics.id');
+        })
+        ->selectRaw('evaluations.id as id, answer, metric_id, question, answer_type, reviewer_email, evaluations.status,
+        editor_comments, additional_comments, reviewer')
+        ->get();
 
         return response()->json([
             'success' => true,
@@ -91,7 +161,8 @@ class PaperController extends Controller
             'evaluation_metric' => array(
                 'name' => $evaluation_metric->name,
                 'questions' => $metrics
-            )
+            ),
+            'reviews' => $evaluations
         ]);
     }
 
@@ -387,8 +458,31 @@ class PaperController extends Controller
         } else if ($request->user()->type == 'researcher') {
             $papers = Paper::where('researcher_email', $request->user()->email)
                 ->orWhere('status', 'approved');;
+        } else if ($request->user()->type == 'reviewer') {
+            $papers = Assigned::join('papers','papers.id','assigneds.paper_id')
+                ->where('reviewer_email', $request->user()->email) 
+                ->select('papers.*','assigneds.minor_rev_deadline','assigneds.major_rev_deadline');  
+
+            $papers = User::joinSub($papers, 'papers', function ($join) {
+                $join->on('users.email', '=', 'papers.researcher_email');
+            })
+                ->selectRaw('papers.id as id, title, researcher_email, papers.status, editor_email, file_path, 
+                minor_rev_deadline, major_rev_deadline,
+                        CONCAT(first_name,CONCAT(" ",last_name)) as researcher, users.id as researcher_id');
+            $papers = User::joinSub($papers, 'papers', function ($join) {
+                $join->on('users.email', '=', 'papers.editor_email');
+            })
+                ->selectRaw('papers.id as id, title, researcher_email, papers.status, editor_email, file_path, 
+                        researcher_id, researcher, minor_rev_deadline, major_rev_deadline,
+                        CONCAT(first_name,CONCAT(" ",last_name)) as editor, users.id as editor_id')
+                ->get();
+    
+            return response()->json([
+                'success' => true,
+                'papers' => $papers
+            ]);
         } else {
-            $papers = Paper::where('status', 'approved');
+            $papers = Paper::where('status', 'published');
         }
 
         $papers = User::joinSub($papers, 'papers', function ($join) {

@@ -65,8 +65,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/paper/{id}/status',[PaperController::class,'getPaperStatus']);    
     Route::post('/paper/{id}/withdraw',[PaperController::class,'withdrawPaper']);
     Route::post('/paper/{id}/request_withdraw',[PaperController::class,'requestWithdrawPaper']);
+    Route::post('/paper/{id}/review', [PaperController::class,'submitReview']);
     Route::post('/paper/upload', [PaperController::class,'uploadPaper']);
     Route::get('/paper/reviewers', [PaperController::class,'getPaperReviewers']);
+    
 
     Route::post('/nominated/new', [NominatedReviewersController::class,'nominateForPaper']);
     Route::post('/nominated/remove', [NominatedReviewersController::class,'removeNominee']);

@@ -23,8 +23,7 @@ class DatabaseSeeder extends Seeder
             MetricSeeder::class,
             NominatedReviewersSeeder::class,
             PaperSeeder::class,
-            PaperJournalSeeder::class,            
-            ReviewSeeder::class,
+            PaperJournalSeeder::class,    
             AssignedsSeeder::class,
             
         ]);
