@@ -18,7 +18,9 @@ Route::post('/login', [UserController::class,'authenticate']);
 Route::get('/logout', [UserController::class,'logout']);
 
 Route::get('/', function () {
-    return view('welcome');
+    return response()->json([
+        'hello' => 'access specific routes to get specific data'
+    ]);
 });
 
 Route::get('/error', function () {

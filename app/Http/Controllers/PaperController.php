@@ -75,7 +75,8 @@ class PaperController extends Controller
                 'editor' => $editor->first_name . " " . $editor->last_name,
                 'editor_id' => $editor->id,
                 'editor_email' => $editor->email,
-                'researcher_email' => $researcher->email
+                'researcher_email' => $researcher->email,
+                'em_name' => $paper->em_name,
             ),
             'nominated' => $nominated,
             'assigned' => $assigned
@@ -366,12 +367,12 @@ class PaperController extends Controller
         $papers = User::joinSub($papers, 'papers', function ($join) {
             $join->on('users.email', '=', 'papers.researcher_email');
         })
-            ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, 
+            ->selectRaw('papers.id as id, title, researcher_email, papers.status, editor_email, file_path, 
                     CONCAT(first_name,CONCAT(" ",last_name)) as researcher, users.id as researcher_id');
         $papers = User::joinSub($papers, 'papers', function ($join) {
             $join->on('users.email', '=', 'papers.editor_email');
         })
-            ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, 
+            ->selectRaw('papers.id as id, title, researcher_email, papers.status, editor_email, file_path, 
                     researcher_id, researcher,
                     CONCAT(first_name,CONCAT(" ",last_name)) as editor, users.id as editor_id')
             ->get();
