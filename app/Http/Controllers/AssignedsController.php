@@ -10,7 +10,65 @@ use App\Models\Assigned;
 class AssignedsController extends Controller
 {
     public function assignReviewer(Request $request) {
-        return;
+        if ($request->user()->type != 'editor' ) {
+            return response()->json([
+                'error' => true,
+                'message' => 'You are not alloweed to view this section'
+            ], 401);
+        }
+
+
+        $request->validate([
+            'paper_id' => 'required|exists:papers,id',
+            'rsearcher_email' => 'required|exists:users,email',
+            'reviewer_email' => 'required|exists:users,email',
+            'minor_rev_deadline' => 'required',
+            'major_rev_deadline' => 'required',
+        ]);
+
+        $paper = Paper::find($request->paper_id);
+
+        if (!$paper) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Paper with id ' . $request->paper_id . ' does not exist'
+            ],404);
+        }
+
+        $reviewer = User::where('email',$request->reviewer_email)->first();
+
+        if (!$reviewer) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Reviewer with id ' . $request->reviewer_email . ' does not exist'
+            ],404);
+        }
+
+        if ( $paper->editor_email != $request->user()->email ) {
+            return response()->json([
+                'error' => true,
+                'message' =>'You do not have the authority to perform this action'
+            ],401);
+        }
+
+        $assigned = new Assigned;
+        $assigned->paper_id = $request->paper_id;        
+        $assigned->researcher_email = $request->researcher_email;
+        $assigned->reviewer_email = $request->reviewer_email;
+        $assigned->minor_rev_deadline = $request->minor_rev_deadline;
+        $assigned->major_rev_deadline = $request->major_rev_deadline;
+        $assigned->save();
+
+        return response()->json([
+            'success' => true,  
+            'assigned' => array(
+                'paper_id' => $assigned->paper_id,
+                'researcher_email' => $assigned->researcher_email,
+                'reviewer_email' => $assigned->reviewer_email,
+                'minor_rev_deadline' => $assigned->minor_rev_deadline,
+                'major_rev_deadline' => $assigned->major_rev_deadline
+            )
+        ]);
     }
 
     public function getAllInfo(Request $request) {

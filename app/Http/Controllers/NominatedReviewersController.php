@@ -66,7 +66,7 @@ class NominatedReviewersController extends Controller
 
     public function removeNominee (Request $request) {
 
-        if ( $request->user()->type != 'researcher') {
+        if ( $request->user()->type != 'researcher' && $request->user()->type != 'editor') {
             return response()->json([
                 'error' => true,
                 'message' =>'You do not have the authority to perform this action'
@@ -96,7 +96,7 @@ class NominatedReviewersController extends Controller
             ],404);
         }
 
-        if ( $paper->researcher_email != $request->user()->email ) {
+        if ( $paper->researcher_email != $request->user()->email && $paper->editor_email != $request->user()->email) {
             return response()->json([
                 'error' => true,
                 'message' =>'You do not have the authority to perform this action'
