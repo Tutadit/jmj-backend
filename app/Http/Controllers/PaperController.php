@@ -8,13 +8,14 @@ use App\Models\User;
 use App\Models\Withdraw;
 use App\Models\NominatedReviewer;
 use App\Models\Assigned;
+use App\Models\Withdrawl;
 
 class PaperController extends Controller
 {
     public function getPaperById(Request $request, $id)
     {
 
-        $paper = Paper::find($id);
+        $paper = Paper::find($id);        
 
         if (!$paper) {
             return response()->json([
@@ -22,6 +23,8 @@ class PaperController extends Controller
                 'message' => 'Paper with id ' . $id . ' not found'
             ], 404);
         }
+
+        $withdrawl = Withdrawl::where('paper_id','=',$id)->first();        
 
         if ($paper->status !== 'published') {
             if ($request->user()->type == 'editor') {
@@ -79,7 +82,8 @@ class PaperController extends Controller
                 'em_name' => $paper->em_name,
             ),
             'nominated' => $nominated,
-            'assigned' => $assigned
+            'assigned' => $assigned,
+            'withdraw' => $withdrawl ? $withdrawl->status : false
         ]);
     }
 
@@ -212,18 +216,16 @@ class PaperController extends Controller
             ], 401);
         }
 
-
-        $papers = Paper::where('status', 'withdraw_request')
-            ->orWhere('status', 'withdrawn');
+        $papers = Paper::join('withdrawls','withdrawls.paper_id','papers.id')->select('papers.*','withdrawls.status as withdrawal_status');
         $papers = User::joinSub($papers, 'papers', function ($join) {
             $join->on('users.email', '=', 'papers.researcher_email');
         })
-            ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, 
+            ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, withdrawal_status, title,
                     CONCAT(first_name,CONCAT(" ",last_name)) as researcher, users.id as researcher_id');
         $papers = User::joinSub($papers, 'papers', function ($join) {
             $join->on('users.email', '=', 'papers.editor_email');
         })
-            ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, 
+            ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, withdrawal_status, title,
                     researcher_id, researcher,
                     CONCAT(first_name,CONCAT(" ",last_name)) as editor, users.id as editor_id')
             ->get();
@@ -241,25 +243,34 @@ class PaperController extends Controller
                 'message' => 'You are not alloweed to view this section'
             ], 401);
         }
-
+        
         $paper = Paper::find($id);
 
         if (!$paper)
             return response()->json([
                 'error' => true,
-                'message' => 'Paper withdrawPaper id ' . $id . 'does not exist'
+                'message' => 'Paper not found'
+            ]);
+
+        $withdrawl = Withdrawl::where('paper_id',$id)->first();
+
+        if (!$withdrawl)
+            return response()->json([
+                'error' => true,
+                'message' => 'Paper withrawls not requested'
             ]);
 
         $request->validate([
             'approved' => 'boolean'
         ]);
 
-        if ($request->has('approved'))
-            $paper->status = $request->approved ? 'withdrawn' : 'withdraw_request';
-        else
-            $paper->status = 'withdrawn';
-
-        $paper->save();
+        if ($request->has('approved') && $request->approved == false) {
+            $withdrawl->status = 'rejected';
+            $withdrawl->save();
+        } else {
+            $paper->delete();
+        }
+        
 
         return response()->json([
             'success' => true,
@@ -288,8 +299,16 @@ class PaperController extends Controller
                 'message' => 'You do not own this paper'
             ], 401);
 
-        $paper->status = 'withdraw_request';
-        $paper->save();
+        $withdrawl = Withdrawl::where('paper_id',$id)->first();
+
+        if ($withdrawl)
+            $withdrawl->delete();
+        else {
+            $withdrawl = new Withdrawl;
+            $withdrawl->paper_id = $id;
+            $withdrawl->status = 'awaiting';
+            $withdrawl->save();           
+        }     
 
         return response()->json([
             'success' => true,

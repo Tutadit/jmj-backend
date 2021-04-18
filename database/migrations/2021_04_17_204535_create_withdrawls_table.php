@@ -18,10 +18,8 @@ class CreateWithdrawlsTable extends Migration
             $table->unsignedBigInteger('paper_id');
             $table->set('status',['awaiting','rejected']);
             $table->timestamps();
-
-            $table->foreign('paper_id')->references('id')->on('papers')->onUpdate('cascade');
-
-
+            $table->unique('paper_id');            
+            $table->foreign('paper_id')->references('id')->on('papers')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

@@ -77,12 +77,12 @@ class JournalController extends Controller
             $journals = Journal::join('users','journals.admin_email','users.email')
                         ->where('editor_email',$request->user()->email)
                         ->selectRaw('title, published_date,journals.status as status,
-                                users.id as admin_id, admin_email,
+                                users.id as admin_id, journals.admin_email,
                                 CONCAT(first_name,CONCAT(" ", last_name)) as admin ,editor_email');
             
             $journals = User::joinSub($journals,'journals', function ($join) {
                 $join->on('users.email','=','journals.editor_email');
-            })->selectRaw('title, published_date,journals.status as status, admin_email, editor_email, admin_id,
+            })->selectRaw('title, published_date,journals.status as status, journals.admin_email, editor_email, admin_id,
             admin , CONCAT(first_name,CONCAT(" ", last_name)) as editor, users.id as editor_id')
             ->get();
 
@@ -96,13 +96,13 @@ class JournalController extends Controller
             
             $journals = Journal::join('users','journals.admin_email','users.email')                       
                         ->selectRaw('journals.id, title, published_date,journals.status as status,
-                                users.id as admin_id, admin_email,
+                                users.id as admin_id, journals.admin_email,
                                 CONCAT(first_name,CONCAT(" ", last_name)) as admin ,editor_email');
             
             $journals = User::joinSub($journals,'journals', function ($join) {
                 $join->on('users.email','=','journals.editor_email');
             })->selectRaw('journals.id, title, published_date,journals.status as status, admin_id,
-            editor_email, admin_email,
+            editor_email, journals.admin_email,
             admin , CONCAT(first_name,CONCAT(" ", last_name)) as editor, users.id as editor_id')
             ->get();
 
@@ -136,22 +136,25 @@ class JournalController extends Controller
         }
         
         $papers = PaperJournal::join('papers','paper_journals.paper_id','papers.id')
-        ->select('title','papers.id as id','editor_email', 'file_path', 'researcher_email')        
+        ->select('title','papers.id as id','editor_email', 'file_path', 'researcher_email', 'em_name', 'papers.status')        
         ->where('journal_id',$journal->id);
 
         $papers = User::joinSub($papers, 'papers', function($join) {
             $join->on('papers.editor_email','=','users.email');
         })
-        ->selectRaw('title, papers.id as id, file_path, researcher_email, editor_email,
+        ->selectRaw('title, papers.id as id, file_path, researcher_email, editor_email, em_name, papers.status,
                     users.id as editor_id, CONCAT(first_name, CONCAT(" ", last_name)) as editor');
 
         $papers = User::joinSub($papers, 'papers', function($join) {
             $join->on('papers.researcher_email','=','users.email');
         })
-        ->selectRaw('title, papers.id as id, file_path, researcher_email,
+        ->selectRaw('title, papers.id as id, file_path, researcher_email, em_name, papers.status,
                     editor, editor_id, editor_email,
                     users.id as researcher_id, CONCAT(first_name, CONCAT(" ", last_name)) as researcher')
         ->get();
+
+        $editor = User::where('email',$journal->editor_email)->first();
+        $admin = User::where('email',$journal->admin_email)->first();
 
         return response()->json([
             'journal' => [
@@ -160,6 +163,8 @@ class JournalController extends Controller
                 'status' => $journal->status,
                 'admin_email' => $journal->admin_email,
                 'editor_email' => $journal->editor_email,
+                'editor' => $editor->first_name . " " . $editor->last_name,
+                'admin' => $admin->first_name . " " . $admin->last_name,
                 'papers' => $papers
             ]
         ]);
