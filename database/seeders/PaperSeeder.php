@@ -70,7 +70,7 @@ class PaperSeeder extends Seeder
 
         DB::table('papers')->insert([
             'title' => 'Paper of number 7',
-            'status' => 'withdrawn',
+            'status' => 'published',
             'file_path' => 'file3.pdf',
             'researcher_email' => 'researcher@mail.com',
             'editor_email' => 'editor@mail.com',
@@ -79,7 +79,7 @@ class PaperSeeder extends Seeder
 
         DB::table('papers')->insert([
             'title' => 'Paper of number 8',
-            'status' => 'withdraw_request',
+            'status' => 'published',
             'file_path' => 'file4.pdf',
             'researcher_email' => 'researcher@mail.com',
             'editor_email' => 'editor@mail.com',

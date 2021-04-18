@@ -133,5 +133,45 @@ class UserSeeder extends Seeder
             'type'=>'reviewer',
             'status' => 'awaiting'
         ]);
+
+        DB::table('users')->insert([
+            'first_name' => 'James',
+            'last_name' => 'Coco',
+            'email' => 'reviewer3@mail.com',
+            'admin_email' => 'admin@mail.com',
+            'password' => Hash::make('password'),
+            'type'=>'reviewer',
+            'status' => 'approved'
+        ]);
+
+        DB::table('users')->insert([
+            'first_name' => 'Sarah',
+            'last_name' => 'Sonz',
+            'email' => 'reviewer4@mail.com',
+            'admin_email' => 'admin@mail.com',
+            'password' => Hash::make('password'),
+            'type'=>'reviewer',
+            'status' => 'approved'
+        ]);
+
+        DB::table('users')->insert([
+            'first_name' => 'Emily',
+            'last_name' => 'Stuarts',
+            'email' => 'reviewer5@mail.com',
+            'admin_email' => 'admin@mail.com',
+            'password' => Hash::make('password'),
+            'type'=>'reviewer',
+            'status' => 'approved'
+        ]);
+
+        DB::table('users')->insert([
+            'first_name' => 'Cody',
+            'last_name' => 'Fleminton',
+            'email' => 'reviewer6@mail.com',
+            'admin_email' => 'admin@mail.com',
+            'password' => Hash::make('password'),
+            'type'=>'reviewer',
+            'status' => 'approved'
+        ]);
     }
 }
