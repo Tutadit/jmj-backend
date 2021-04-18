@@ -15,8 +15,8 @@ class ReviewSeeder extends Seeder
     public function run()
     {
         DB::table('reviews')->insert([
-            'editor_comments' => 'What up',
-            'additional_comments' => 'nigga',
+            'editor_comments' => 'This was very well written',
+            'additional_comments' => 'I approve this',
             'reviewer_email' => 'reviewer@mail.com',
             'paper_id' => '1',
             'researcher_email' => 'researcher@mail.com',
@@ -24,12 +24,21 @@ class ReviewSeeder extends Seeder
         ]);
 
         DB::table('reviews')->insert([
-            'editor_comments' => 'What up',
-            'additional_comments' => 'Artem',
+            'editor_comments' => 'This was NOT very well written',
+            'additional_comments' => 'I reject this',
             'reviewer_email' => 'reviewer@mail.com',
             'paper_id' => '1',
             'researcher_email' => 'researcher@mail.com',
             'status' => 'rejected'
+        ]);
+
+        DB::table('reviews')->insert([
+            'editor_comments' => 'I am gonna think about this one',
+            'additional_comments' => 'Just wait',
+            'reviewer_email' => 'reviewer@mail.com',
+            'paper_id' => '1',
+            'researcher_email' => 'researcher@mail.com',
+            'status' => 'pending'
         ]);
     }
 }
