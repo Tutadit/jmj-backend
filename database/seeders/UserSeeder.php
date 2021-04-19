@@ -193,5 +193,47 @@ class UserSeeder extends Seeder
             'type'=>'editor',
             'status' => 'approved'
         ]);
+
+        DB::table('personal_access_tokens')->insert([ //Admin
+            'tokenable_type' => 'App\Models\User',
+            'name' => 'Initial token',
+            'token' => hash('sha256','YwTXYUlnjnPDmU0pZEsnslFK3kwXf8GItIp3C2Nb'),
+            'abilities' => '["*"]',
+            'tokenable_id' => 1,
+        ]);
+
+        DB::table('personal_access_tokens')->insert([ //Researcher
+            'tokenable_type' => 'App\Models\User',
+            'name' => 'Initial token',
+            'token' => hash('sha256','PA9HGaJwBfQk6fKR6SfPfJkTqGPegyA7rsDlblcG'),
+            'abilities' => '["*"]',
+            'tokenable_id' => 2,
+        ]);
+
+        DB::table('personal_access_tokens')->insert([ //Editor
+            'tokenable_type' => 'App\Models\User',
+            'name' => 'Initial token',
+            'token' => hash('sha256','wBwJaLPpTEQ0GjcOwtHd5orHc3rMwd1bMidcCOPD'),
+            'abilities' => '["*"]',
+            'tokenable_id' => 3,
+        ]);
+
+        DB::table('personal_access_tokens')->insert([ //Reviewer
+            'tokenable_type' => 'App\Models\User',
+            'name' => 'Initial token',
+            'token' => hash('sha256','W6KGSQ6QvsPDYu1CDjMI3zUjCmNh5B9soyWEQXXh'),
+            'abilities' => '["*"]',
+            'tokenable_id' => 4,
+        ]);
+
+        DB::table('personal_access_tokens')->insert([ //Viewer
+            'tokenable_type' => 'App\Models\User',
+            'name' => 'Initial token',
+            'token' => hash('sha256','w3e9QdJuz7ZXGHhyzGbyUjTCYOlm9clhGIgEVmBQ'),
+            'abilities' => '["*"]',
+            'tokenable_id' => 5,
+        ]);
+
+
     }
 }

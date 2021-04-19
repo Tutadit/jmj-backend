@@ -6,6 +6,14 @@ In order to facilitate the development we are going to use the Sail package prov
 
 ---
 
+## User tokens:
+
+- Admin: `1|YwTXYUlnjnPDmU0pZEsnslFK3kwXf8GItIp3C2Nb`
+- Researcher: `2|PA9HGaJwBfQk6fKR6SfPfJkTqGPegyA7rsDlblcG`
+- Editor: `3|wBwJaLPpTEQ0GjcOwtHd5orHc3rMwd1bMidcCOPD`
+- Reviewer: `4|W6KGSQ6QvsPDYu1CDjMI3zUjCmNh5B9soyWEQXXh`
+- Viewer: `5|w3e9QdJuz7ZXGHhyzGbyUjTCYOlm9clhGIgEVmBQ`
+
 ## Installation Guide (Windows)
 ### Install the Prerequisites
 
