@@ -240,7 +240,7 @@ class UserController extends Controller
             $index = 0;
             $errors = [];
             foreach ( $request->degrees as $degree) {
-                if (getype($degree) == 'string')
+                if (gettype($degree) == 'string')
                     $degree = json_decode($degree);
                 $validator = Validator::make($degree, [
                     'title'=>'required|string',
