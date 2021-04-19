@@ -16,11 +16,12 @@ class CreatePapersTable extends Migration
         Schema::create('papers', function (Blueprint $table) {
             $table->id();
             $table->string('title'); 
-            $table->set('status', ['pending_minor_revision', 'pending_major_revision', 'pending_publication', 'published']);
+            $table->set('status', ['pending_assignment','pending_revision', 'pending_publication', 'published'])
+                    ->default('pending_assignment');
             $table->string('file_path');
             $table->string('researcher_email');
-            $table->string('editor_email');
-            $table->string('em_name');
+            $table->string('editor_email')->nullable();
+            $table->string('em_name')->nullable();
             $table->timestamps();
 
             //

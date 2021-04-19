@@ -265,6 +265,7 @@ class PaperController extends Controller
             $paper->file_path = $path;
             $paper->researcher_email = $request->user()->email;
             $paper->status = 'pending_assignment';
+            $paper->editor_email = 'editor@mail.com';
             $paper->save();
 
             
@@ -490,7 +491,7 @@ class PaperController extends Controller
                 ->orWhere('status', 'approved');
         } else if ($request->user()->type == 'researcher') {
             $papers = Paper::where('researcher_email', $request->user()->email)
-                ->orWhere('status', 'approved');;
+                ->orWhere('status', 'approved');
         } else if ($request->user()->type == 'reviewer') {
             $papers = Assigned::join('papers','papers.id','assigneds.paper_id')
                 ->where('reviewer_email', $request->user()->email) 
@@ -523,6 +524,7 @@ class PaperController extends Controller
         })
             ->selectRaw('papers.id as id, title, researcher_email, papers.status, editor_email, file_path, 
                     CONCAT(first_name,CONCAT(" ",last_name)) as researcher, users.id as researcher_id');
+        
         $papers = User::joinSub($papers, 'papers', function ($join) {
             $join->on('users.email', '=', 'papers.editor_email');
         })
