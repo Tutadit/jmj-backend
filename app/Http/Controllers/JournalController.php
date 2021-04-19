@@ -33,7 +33,7 @@ class JournalController extends Controller
             
             return response()->json([
                 'success' => true,
-                'journal' => $journal
+                'journal' => $Journal
             ]);
 
         } elseif ($request->user()->type == 'admin') {
