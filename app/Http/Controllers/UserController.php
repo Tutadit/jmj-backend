@@ -404,7 +404,7 @@ class UserController extends Controller
             return response()->json([
                 'error' => true,
                 'message' => 'User with id ' . $id . ' does not exist'
-            ]);
+            ], 404);
 
         $user->delete();
 
