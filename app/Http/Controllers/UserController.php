@@ -238,10 +238,8 @@ class UserController extends Controller
 
         if ( $request->type === "researcher" ) {
             $index = 0;
-            $errors = [];
-            foreach ( $request->degrees as $degree) {
-                if (gettype($degree) == 'string')
-                    $degree = json_decode($degree);
+            $errors = [];        
+            foreach ( $request->degrees as $degree) {                                
                 $validator = Validator::make($degree, [
                     'title'=>'required|string',
                     'institution'=>'required|string',
