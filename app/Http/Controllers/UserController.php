@@ -422,13 +422,13 @@ class UserController extends Controller
             return response()->json([
                 'error' => true,
                 'message' => 'User with id ' . $id . ' does not exist'
-            ]);
+            ], 404);
 
         if ($user->type != 'researcher')
             return response()->json([
                 'error' => true,
                 'message' => 'User with id ' . $id . ' is not a researcher'
-            ]);
+            ], 401);
 
 
         $degrees = Degree::where('researcher_email', $user->email)->get();
@@ -451,7 +451,7 @@ class UserController extends Controller
         $request->validate([
             'title' => 'required|string',
             'institution' => 'required|string',
-            'received' => 'required|string',
+            'received' => 'required|date',
         ]);
 
         $user = User::find($id);
@@ -495,7 +495,7 @@ class UserController extends Controller
             return response()->json([
                 'error' => true,
                 'message' => 'User with id ' . $id . ' does not exist'
-            ]);
+            ], 404);
         }
 
         $degree = Degree::find($request->degree_id);
@@ -504,7 +504,7 @@ class UserController extends Controller
             return response()->json([
                 'error' => true,
                 'message' => 'Degree with id ' . $request->degree_id . ' does not exist'
-            ]);
+            ], 404);
 
         $degree->delete();
 
