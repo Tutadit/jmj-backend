@@ -78,12 +78,12 @@ class JournalController extends Controller
             $journals = Journal::join('users', 'journals.admin_email', 'users.email')
                 ->where('editor_email', $request->user()->email)
                 ->selectRaw('title, published_date,journals.status as status,
-                                users.id as admin_id, journals.admin_email,
+                                users.id as admin_id, journals.admin_email, journals.id as id,
                                 CONCAT(first_name,CONCAT(" ", last_name)) as admin ,editor_email');
 
             $journals = User::joinSub($journals, 'journals', function ($join) {
                 $join->on('users.email', '=', 'journals.editor_email');
-            })->selectRaw('title, published_date,journals.status as status, journals.admin_email, editor_email, admin_id,
+            })->selectRaw('title, published_date,journals.status as status, journals.id as id, journals.admin_email, editor_email, admin_id,
             admin , CONCAT(first_name,CONCAT(" ", last_name)) as editor, users.id as editor_id')
                 ->get();
 
