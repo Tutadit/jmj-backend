@@ -443,8 +443,6 @@ class PaperController extends Controller
                 'status' => 'in:pending_revision,pending_publication,pending_assignment,published'
             ]);
 
-
-
             if ($request->has('title'))
                 $paper->title = $request->title;
             if ($request->has('status'))
@@ -506,8 +504,6 @@ class PaperController extends Controller
 
     public function getAllPapers(Request $request)
     {
-
-
         if ($request->user()->type == 'admin') {
             $papers = Paper::select('*');
         } else if ($request->user()->type == 'editor') {
