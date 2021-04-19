@@ -388,7 +388,7 @@ class PaperController extends Controller
             $withdrawl->status = 'awaiting';
             $withdrawl->save();           
         }     
-
+\
         return response()->json([
             'success' => true,
         ]);
@@ -404,8 +404,8 @@ class PaperController extends Controller
             if (!$paper)
                 return response()->json([
                     'error' => true,
-                    'message' => 'paper with id ' . $id . 'does not exist'
-                ]);
+                    'message' => 'paper with id ' . $id . ' does not exist'
+                ],404);
 
             $request->validate([
                 'title' => 'string',

@@ -16,17 +16,19 @@ class CreateEvaluationsTable extends Migration
         Schema::create('evaluations', function (Blueprint $table) {
             $table->id();
             $table->string('answer');
-            $table->timestamps();
             $table->unsignedBigInteger('metric_id');
             $table->string('reviewer_email');
             $table->unsignedBigInteger('paper_id');
             $table->set('status', ['approved', 'rejected', 'pending']);
             $table->string('editor_comments');
             $table->string('additional_comments');
+            $table->timestamps();
             // 
             $table->foreign('metric_id')->references('id')->on('metrics')->onUpdate('cascade')
             ->onDelete('cascade');
             $table->foreign('paper_id')->references('id')->on('papers')->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('reviewer_email')->references('email')->on('users')->onUpdate('cascade')
                 ->onDelete('cascade');
             //
             $table->index(['metric_id','paper_id','reviewer_email']);
