@@ -430,8 +430,33 @@ class PaperController extends Controller
 
     public function editPaper(Request $request, $id)
     {
+        if ($request->user()->type == 'editor') {
+            $paper = Paper::find($id);
 
-        if ($request->user()->type == 'researcher') {
+            if (!$paper)
+                return response()->json([
+                    'error' => true,
+                    'message' => 'paper with id ' . $id . ' does not exist'
+                ],404);
+
+            $request->validate([
+                'title' => 'string',
+                'status' => 'in:pending_revision,pending_publication,pending_assignment,published'
+            ]);
+
+
+
+            if ($request->has('title'))
+                $paper->title = $request->title;
+            if ($request->has('status'))
+                $paper->status = $request->status;
+
+            $paper->save();
+
+            return response()->json([
+                'success' => true,
+            ]);
+        } else if ($request->user()->type == 'researcher' ) {
 
             $paper = Paper::find($id);
 

@@ -71,11 +71,14 @@ class AssignedsController extends Controller
         $assigned->revision_deadline = $request->revision_deadline;
         $assigned->save();
 
+        $reviewer = User::where('email', $assigned->reviewer_email)->first();
+
         return response()->json([
             'success' => true,  
             'assigned' => array(
                 'paper_id' => $assigned->paper_id,
-                'researcher_email' => $assigned->researcher_email,
+                'reviewer_id'=>$reviewer->id,
+                'reviewer' => $reviewer->first_name . ' ' . $reviewer->last_name,
                 'reviewer_email' => $assigned->reviewer_email,
                 'revision_deadline' => $assigned->revision_deadline
             )
