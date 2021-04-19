@@ -71,9 +71,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/nominated/new', [NominatedReviewersController::class, 'nominateForPaper']);
     Route::post('/nominated/remove', [NominatedReviewersController::class, 'removeNominee']);
 
-    Route::get('/reviews/{id}', [ReviewController::class, 'getReviewsForPaper']);
-    Route::post('/reviews/{id}', [ReviewController::class, 'approveRejectReview']);
-
     Route::post('/assigned/new', [AssignedsController::class, 'assignReviewer']);
     Route::get('/assigned/reviewer/{id}', [AssignedsController::class, 'getAllPapersAssignedToReviewer']);
     Route::get('/assigned/researcher/{id}', [AssignedsController::class, 'getAllPapersAssignedToResearcher']);
