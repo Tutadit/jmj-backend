@@ -38,4 +38,5 @@ class AssignedsSeeder extends Seeder
             'minor_rev_deadline' => '2020-01-02',
             'major_rev_deadline' => '2020-01-03'
         ]);
+    }
 }
