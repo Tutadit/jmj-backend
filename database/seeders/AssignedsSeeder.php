@@ -30,5 +30,13 @@ class AssignedsSeeder extends Seeder
             'minor_rev_deadline' => '2020-01-02',
             'major_rev_deadline' => '2020-01-03'
         ]);
+
+        DB::table('assigneds')->insert([
+            'paper_id' => '1',
+            'researcher_email' => 'researcher1@mail.com',
+            'reviewer_email' => 'reviewer1@mail.com',
+            'minor_rev_deadline' => '2020-01-02',
+            'major_rev_deadline' => '2020-01-03'
+        ]);
     }
 }
