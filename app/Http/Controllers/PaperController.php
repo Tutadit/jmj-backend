@@ -443,8 +443,6 @@ class PaperController extends Controller
                 'status' => 'in:pending_revision,pending_publication,pending_assignment,published'
             ]);
 
-
-
             if ($request->has('title'))
                 $paper->title = $request->title;
             if ($request->has('status'))
@@ -506,8 +504,6 @@ class PaperController extends Controller
 
     public function getAllPapers(Request $request)
     {
-
-
         if ($request->user()->type == 'admin') {
             $papers = Paper::select('*');
         } else if ($request->user()->type == 'editor') {
@@ -519,19 +515,19 @@ class PaperController extends Controller
         } else if ($request->user()->type == 'reviewer') {
             $papers = Assigned::join('papers','papers.id','assigneds.paper_id')
                 ->where('reviewer_email', $request->user()->email) 
-                ->select('papers.*','assigneds.minor_rev_deadline','assigneds.major_rev_deadline');  
+                ->select('papers.*','assigneds.revision_deadline');  
 
             $papers = User::joinSub($papers, 'papers', function ($join) {
                 $join->on('users.email', '=', 'papers.researcher_email');
             })
                 ->selectRaw('papers.id as id, title, researcher_email, papers.status, editor_email, file_path, 
-                minor_rev_deadline, major_rev_deadline,
-                        CONCAT(first_name,CONCAT(" ",last_name)) as researcher, users.id as researcher_id');
+                revision_deadline, CONCAT(first_name,CONCAT(" ",last_name)) as researcher, users.id as researcher_id');
+
             $papers = User::joinSub($papers, 'papers', function ($join) {
                 $join->on('users.email', '=', 'papers.editor_email');
             })
                 ->selectRaw('papers.id as id, title, researcher_email, papers.status, editor_email, file_path, 
-                        researcher_id, researcher, minor_rev_deadline, major_rev_deadline,
+                        researcher_id, researcher, revision_deadline,
                         CONCAT(first_name,CONCAT(" ",last_name)) as editor, users.id as editor_id')
                 ->get();
     
