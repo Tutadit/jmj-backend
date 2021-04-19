@@ -18,8 +18,7 @@ class CreateAssignedTable extends Migration
             $table->unsignedBigInteger('paper_id');              
             $table->string('researcher_email');
             $table->string('reviewer_email');
-            $table->date('minor_rev_deadline');  
-            $table->date('major_rev_deadline');        
+            $table->date('revision_deadline');         
             $table->timestamps();
 
             // foreign key
