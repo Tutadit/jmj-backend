@@ -219,19 +219,18 @@ class PaperController extends Controller
             $papers = User::joinSub($papers, 'papers', function ($join) {
                 $join->on('users.email', '=', 'papers.researcher_email');
             })
-                ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, 
+                ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, title,
                         CONCAT(first_name,CONCAT(" ",last_name)) as researcher, users.id as researcher_id');
             $papers = User::joinSub($papers, 'papers', function ($join) {
                 $join->on('users.email', '=', 'papers.editor_email');
             })
                 ->selectRaw('papers.id as id, researcher_email, papers.status, editor_email, file_path, 
-                        researcher_id, researcher,
+                        researcher_id, researcher, title,
                         CONCAT(first_name,CONCAT(" ",last_name)) as editor, users.id as editor_id')
                 ->get();
 
-
             return response()->json([
-                'papers' => $papers,
+                'papers' => $papers
             ]);
         }
 
