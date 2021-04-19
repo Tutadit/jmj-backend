@@ -56,7 +56,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/journals/{id}/add_paper',[JournalController::class,'addPaperToJournal']);
     Route::post('/journals/{id}/remove_paper',[JournalController::class,'removePaperFromJournal']);
 
-
     Route::get('/paper/all', [PaperController::class,'getAllPapers']);
     Route::get('/paper/withdrawn',[PaperController::class,'getPapersWithdrawn']);
     Route::get('/paper/by_researcher/{id}', [PaperController::class, 'getAllPapersByResearcher']);
@@ -68,7 +67,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/paper/{id}/review', [PaperController::class,'submitReview']);
     Route::post('/paper/upload', [PaperController::class,'uploadPaper']);
     Route::get('/paper/reviewers', [PaperController::class,'getPaperReviewers']);
-    
 
     Route::post('/nominated/new', [NominatedReviewersController::class,'nominateForPaper']);
     Route::post('/nominated/remove', [NominatedReviewersController::class,'removeNominee']);
@@ -81,7 +79,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/assigned/reviewer/{id}', [AssignedsController::class, 'getAllPapersAssignedToReviewer']);
     Route::get('/assigned/researcher/{id}', [AssignedsController::class, 'getAllPapersAssignedToResearcher']);
     Route::get('/assigned/reviewers/{id}', [AssignedsController::class, 'getReviewersAssignedToPaper']);
-
+    Route::post('/assigned/remove', [AssignedsController::class,'removeAssigned']);
 
     Route::get('/evaluation_metrics/all',[EvaluationMetricController::class,'getAll']);
     Route::post('/evaluation_metrics/new',[EvaluationMetricController::class,'createNew']);
@@ -89,5 +87,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/evaluation_metrics/{id}/edit',[EvaluationMetricController::class,'editById']);
     Route::post('/evaluation_metrics/{id}/add_question', [EvaluationMetricController::class, 'addQuestion']);
     Route::post('/evaluation_metrics/{id}/remove_question', [EvaluationMetricController::class, 'removeQuestion']);
-
 });
