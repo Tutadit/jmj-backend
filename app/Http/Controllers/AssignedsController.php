@@ -20,7 +20,7 @@ class AssignedsController extends Controller
 
         $request->validate([
             'paper_id' => 'required|exists:papers,id',
-            'rsearcher_email' => 'required|exists:users,email',
+            'researcher_email' => 'required|exists:users,email',
             'reviewer_email' => 'required|exists:users,email',
             'minor_rev_deadline' => 'required',
             'major_rev_deadline' => 'required',
@@ -44,12 +44,23 @@ class AssignedsController extends Controller
             ],404);
         }
 
+        // check if already assigned
+        $find_assigned = Assigned::find([$request->paper_id, $request->researcher_email, $request->reviewer_email]);
+        if ($find_assigned) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Reviewer is already assigned'
+            ],404);
+        }
+
         if ( $paper->editor_email != $request->user()->email ) {
             return response()->json([
                 'error' => true,
                 'message' =>'You do not have the authority to perform this action'
             ],401);
         }
+
+
 
         $assigned = new Assigned;
         $assigned->paper_id = $request->paper_id;        
@@ -68,6 +79,55 @@ class AssignedsController extends Controller
                 'minor_rev_deadline' => $assigned->minor_rev_deadline,
                 'major_rev_deadline' => $assigned->major_rev_deadline
             )
+        ]);
+    }
+
+    public function removeAssigned(Request $request) {
+        if ( $request->user()->type != 'editor') {
+            return response()->json([
+                'error' => true,
+                'message' =>'You do not have the authority to perform this action'
+            ],401);
+        }
+
+        $request->validate([
+            'paper_id' => 'required|exists:papers,id',
+            'reviewer_email' => 'required|exists:users,email'
+        ]);
+
+        $paper = Paper::find($request->paper_id);
+
+        if (!$paper) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Paper with id ' . $request->paper_id . ' does not exist'
+            ],404);
+        }
+
+        $reviewer = User::where('email',$request->reviewer_email)->first();
+
+        if (!$reviewer) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Reviewer with id ' . $request->reviewer_email . ' does not exist'
+            ],404);
+        }
+
+        if ($paper->editor_email != $request->user()->email) {
+            return response()->json([
+                'error' => true,
+                'message' =>'You do not have the authority to perform this action'
+            ],401);
+        }
+
+        $assigned = Assigned::where('paper_id',$request->paper_id)
+                            ->where('reviewer_email',$request->reviewer_email)->first();
+
+        if ($assigned)                                    
+            $assigned->delete();
+
+        return response()->json([
+            'success' => true,            
         ]);
     }
 

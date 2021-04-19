@@ -21,9 +21,9 @@ class DatabaseSeeder extends Seeder
             JournalSeeder::class,
             MeasuredBySeeder::class,
             MetricSeeder::class,
-            NominatedReviewersSeeder::class,
             PaperSeeder::class,
-            PaperJournalSeeder::class,    
+            PaperJournalSeeder::class,  
+            NominatedReviewersSeeder::class,  
             AssignedsSeeder::class,
             
         ]);
