@@ -281,7 +281,7 @@ class UserController extends Controller
                 $deg->title = $degree['title'];
                 $deg->received = $degree['received'];
                 $deg->institution = $degree['institution'];
-                $deg->researcher_email = $user->email;
+                $deg->researcher_email = $newUser->email;
                 $deg->save();
                 array_push($degrees, $deg);
             }
