@@ -25,7 +25,7 @@ class PaperSeeder extends Seeder
 
         DB::table('papers')->insert([
             'title' => 'Paper of number 2',
-            'status' => 'pending_minor_revision',
+            'status' => 'pending_revision',
             'file_path' => 'file2.pdf',
             'researcher_email' => 'researcher@mail.com',
             'editor_email' => 'editor@mail.com',
@@ -34,7 +34,7 @@ class PaperSeeder extends Seeder
 
         DB::table('papers')->insert([
             'title' => 'Paper of number 3',
-            'status' => 'pending_major_revision',
+            'status' => 'pending_revision',
             'file_path' => 'file3.pdf',
             'researcher_email' => 'researcher@mail.com',
             'editor_email' => 'editor@mail.com',
@@ -97,7 +97,7 @@ class PaperSeeder extends Seeder
 
         DB::table('papers')->insert([
             'title' => 'Paper of number 10',
-            'status' => 'pending_minor_revision',
+            'status' => 'pending_publication',
             'file_path' => 'file2.pdf',
             'researcher_email' => 'researcher1@mail.com',
             'editor_email' => 'editor@mail.com',
@@ -106,7 +106,7 @@ class PaperSeeder extends Seeder
 
         DB::table('papers')->insert([
             'title' => 'Paper of number 11',
-            'status' => 'pending_major_revision',
+            'status' => 'pending_revision',
             'file_path' => 'file3.pdf',
             'researcher_email' => 'researcher2@mail.com',
             'editor_email' => 'editor@mail.com',

@@ -22,8 +22,7 @@ class AssignedsController extends Controller
             'paper_id' => 'required|exists:papers,id',
             'researcher_email' => 'required|exists:users,email',
             'reviewer_email' => 'required|exists:users,email',
-            'minor_rev_deadline' => 'required',
-            'major_rev_deadline' => 'required',
+            'revision_deadline' => 'required',
         ]);
 
         $paper = Paper::find($request->paper_id);
@@ -45,14 +44,17 @@ class AssignedsController extends Controller
         }
 
         // check if already assigned
-        $find_assigned = Assigned::find([$request->paper_id, $request->researcher_email, $request->reviewer_email]);
+        $find_assigned = Assigned::where('paper_id', $request->paper_id)
+                                ->where('researcher_email', $request->researcher_email)
+                                ->where('reviewer_email', $request->reviewer_email)->first();
         if ($find_assigned) {
             return response()->json([
-                'error' => true,
-                'message' => 'Reviewer is already assigned'
-            ],404);
+                'success' => true, 
+                'message' => 'The reviewer is already assigned'
+            ]);
         }
 
+        // check editor is paper editor
         if ( $paper->editor_email != $request->user()->email ) {
             return response()->json([
                 'error' => true,
@@ -66,8 +68,7 @@ class AssignedsController extends Controller
         $assigned->paper_id = $request->paper_id;        
         $assigned->researcher_email = $request->researcher_email;
         $assigned->reviewer_email = $request->reviewer_email;
-        $assigned->minor_rev_deadline = $request->minor_rev_deadline;
-        $assigned->major_rev_deadline = $request->major_rev_deadline;
+        $assigned->revision_deadline = $request->revision_deadline;
         $assigned->save();
 
         return response()->json([
@@ -76,8 +77,7 @@ class AssignedsController extends Controller
                 'paper_id' => $assigned->paper_id,
                 'researcher_email' => $assigned->researcher_email,
                 'reviewer_email' => $assigned->reviewer_email,
-                'minor_rev_deadline' => $assigned->minor_rev_deadline,
-                'major_rev_deadline' => $assigned->major_rev_deadline
+                'revision_deadline' => $assigned->revision_deadline
             )
         ]);
     }
