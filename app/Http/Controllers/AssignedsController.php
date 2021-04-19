@@ -62,8 +62,6 @@ class AssignedsController extends Controller
             ],401);
         }
 
-
-
         $assigned = new Assigned;
         $assigned->paper_id = $request->paper_id;        
         $assigned->researcher_email = $request->researcher_email;
