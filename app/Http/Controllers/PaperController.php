@@ -118,16 +118,54 @@ class PaperController extends Controller
             ->selectRaw('CONCAT(first_name, CONCAT(" ", last_name)) as reviewer, users.id as reviewer_id, reviewer_email')->get();
 
         $researcher = User::where('email', $paper->researcher_email)->first();
-        $editor = User::where('email', $paper->editor_email)->first();
-        $evaluation_metric = EvaluationMetric::where('name', $paper->em_name)->first();
+        
 
-        if (!$researcher || !$editor || !$evaluation_metric)
+        if (!$researcher )
             return response()->json([
                 'error' => true,
                 'message' => 'This paper is wild and free, not meant for you'
             ], 422);
         
-        
+        $editor = User::where('email', $paper->editor_email)->first();
+        $evaluation_metric = EvaluationMetric::where('name', $paper->em_name)->first();
+
+        if ( ! $evaluation_metric && $editor)  {
+            return response()->json([
+                'success' => true,
+                'paper' =>  array(
+                    'id' => $paper->id,
+                    'title' => $paper->title,
+                    'status' => $paper->status,
+                    'file_path' => $paper->file_path,
+                    'researcher' => $researcher->first_name . " " . $researcher->last_name,
+                    'researcher_id' => $researcher->id,
+                    'editor' => $editor->first_name . " " . $editor->last_name,
+                    'editor_id' => $editor->id,
+                    'editor_email' => $editor->email,
+                    'researcher_email' => $researcher->email,
+                ),
+                'nominated' => $nominated,
+                'assigned' => $assigned,
+                'withdraw' => $withdrawl ? $withdrawl->status : false,              
+            ]);
+        } else if ( !$editor ) {
+            return response()->json([
+                'success' => true,
+                'paper' =>  array(
+                    'id' => $paper->id,
+                    'title' => $paper->title,
+                    'status' => $paper->status,
+                    'file_path' => $paper->file_path,
+                    'researcher' => $researcher->first_name . " " . $researcher->last_name,
+                    'researcher_id' => $researcher->id,
+                    'researcher_email' => $researcher->email,
+                ),
+                'nominated' => $nominated,
+                'assigned' => $assigned,
+                'withdraw' => $withdrawl ? $withdrawl->status : false,              
+            ]);
+        }
+
         $metrics = Metric::where('em_id',$evaluation_metric->id)->get();
         $evaluations = Evaluation::where('paper_id',$id)
                         ->join('users', 'users.email','evaluations.reviewer_email')
@@ -226,20 +264,18 @@ class PaperController extends Controller
             $path = str_replace('public/', '', $request->file->store('public'));
             $paper->file_path = $path;
             $paper->researcher_email = $request->user()->email;
-            $paper->editor_email = 'editor@mail.com';
-            $paper->em_name = 'Number Eval';
-            $paper->status = 'pending_minor_revision';
+            $paper->status = 'pending_assignment';
             $paper->save();
 
-
+            
             $researcher = User::where('email', $paper->researcher_email)->first();
-            $editor = User::where('email', $paper->editor_email)->first();
 
-            if (!$researcher || !$editor)
+            if ( !$researcher )
                 return response()->json([
                     'error' => true,
                     'message' => 'This paper is wild and free, not meant for you'
                 ], 422);
+
             return response()->json([
                 'success' => true,
                 'paper' => array(
@@ -249,9 +285,6 @@ class PaperController extends Controller
                     'file_path' => $paper->file_path,
                     'researcher' => $researcher->first_name . " " . $researcher->last_name,
                     'researcher_id' => $researcher->id,
-                    'editor' => $editor->first_name . " " . $editor->last_name,
-                    'editor_id' => $editor->id,
-                    'editor_email' => $editor->email,
                     'researcher_email' => $researcher->email
                 )
             ]);
@@ -388,7 +421,7 @@ class PaperController extends Controller
             $withdrawl->status = 'awaiting';
             $withdrawl->save();           
         }     
-\
+
         return response()->json([
             'success' => true,
         ]);
