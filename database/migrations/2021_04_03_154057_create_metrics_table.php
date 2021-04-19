@@ -17,7 +17,7 @@ class CreateMetricsTable extends Migration
             $table->id();
             $table->string('question');             
             $table->set('answer_type', ['scale', 'comment']);
-            $table->unsignedBigInteger('em_id');
+            $table->unsignedBigInteger('em_id'); // Evaluation metric id
             $table->timestamps();
 
             $table->foreign('em_id')->references('id')->on('evaluation_metrics')->onUpdate('cascade')->onDelete('cascade');
